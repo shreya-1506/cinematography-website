@@ -1,0 +1,249 @@
+/* ==========================================================================
+   Preloader, cursor, scroll progress, back-to-top
+   ========================================================================== */
+
+/* ----------------------------------------------------------- preloader ---- */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loader);
+  display: grid;
+  place-items: center;
+  background: var(--black);
+  overflow: hidden;
+}
+
+.preloader__curtains {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.preloader__curtain {
+  flex: 1 1 0;
+  background: var(--ink-900);
+  border-right: 1px solid rgba(233, 229, 221, 0.03);
+}
+
+.preloader__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding-inline: var(--gutter);
+  text-align: center;
+}
+
+.preloader__mark {
+  display: block;
+  width: clamp(46px, 6vw, 66px);
+  color: var(--amber);
+}
+
+.preloader__mark svg {
+  width: 100%;
+  height: auto;
+}
+
+.preloader__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 3.2rem);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+}
+
+.preloader__role {
+  font-size: 0.58rem;
+  letter-spacing: 0.4em;
+  color: var(--fg-faint);
+}
+
+.preloader__meter {
+  position: relative;
+  width: clamp(160px, 26vw, 320px);
+  height: 1px;
+  margin-top: 1.25rem;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.preloader__meter-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--amber);
+  transform-origin: left;
+  transition: transform 0.18s linear;
+}
+
+.preloader__count {
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  color: var(--fg-ghost);
+}
+
+/* -------------------------------------------------------------- cursor ---- */
+
+body.has-custom-cursor,
+body.has-custom-cursor * {
+  cursor: none !important;
+}
+
+.cursor-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+}
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.cursor-dot {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  background: var(--amber);
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.cursor-ring {
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
+  border: 1px solid rgba(233, 229, 221, 0.4);
+  transition: width 0.4s var(--ease-out), height 0.4s var(--ease-out), margin 0.4s var(--ease-out),
+    background-color 0.4s var(--ease-out), border-color 0.4s var(--ease-out), opacity 0.3s var(--ease-out);
+}
+
+.cursor-ring.is-hover {
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  border-color: var(--amber-line);
+  background: rgba(217, 163, 74, 0.08);
+}
+
+.cursor-ring.has-label {
+  width: 92px;
+  height: 92px;
+  margin: -46px 0 0 -46px;
+  border-color: transparent;
+  background: var(--amber);
+}
+
+.cursor-ring.is-pressed {
+  transform: translate(-50%, -50%) scale(0.86);
+}
+
+.cursor-ring__label {
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  color: var(--black);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 80px;
+}
+
+/* ----------------------------------------------------- scroll progress ---- */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: calc(var(--z-nav) + 1);
+  background: linear-gradient(90deg, var(--amber-deep), var(--amber), var(--amber-bright));
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------- back to top ----- */
+
+.back-to-top {
+  position: fixed;
+  right: clamp(1rem, 2.5vw, 2.5rem);
+  bottom: clamp(1rem, 2.5vw, 2.5rem);
+  z-index: var(--z-nav);
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  color: var(--fg);
+  background: rgba(8, 8, 8, 0.72);
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+  color: var(--amber);
+  background: rgba(8, 8, 8, 0.95);
+}
+
+.back-to-top__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--amber);
+}
+
+.back-to-top__arrow {
+  position: relative;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.back-to-top:hover .back-to-top__arrow {
+  transform: translateY(-3px);
+}
+
+/* ------------------------------------------------------- app-level bits --- */
+
+.app {
+  position: relative;
+  isolation: isolate;
+}
+
+.app__main {
+  position: relative;
+}
+
+/* Thin amber rule that separates major sections */
+.divider {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(90deg, transparent, var(--line) 12%, var(--line) 88%, transparent);
+}
+
+/* Section-level error fallback (see components/layout/ErrorBoundary.jsx) */
+.section-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gutter);
+  color: var(--fg-dim);
+  border-block: 1px solid var(--line);
+}

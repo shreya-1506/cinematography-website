@@ -1,0 +1,198 @@
+/* ==========================================================================
+   Expertise rail
+   ========================================================================== */
+
+.expertise {
+  position: relative;
+  background: linear-gradient(180deg, var(--black), var(--ink-800) 60%, var(--ink-900));
+  overflow: hidden;
+}
+
+.expertise__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.expertise__controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.expertise__arrow {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  font-size: 0.95rem;
+  color: var(--fg-dim);
+  border: 1px solid var(--line-strong);
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.expertise__arrow:hover:not(:disabled),
+.expertise__arrow:focus-visible {
+  color: var(--black);
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+.expertise__arrow:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+}
+
+/* ----------------------------------------------------------------- rail --- */
+
+.expertise__rail-wrap {
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.expertise__rail {
+  display: flex;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-inline: var(--gutter);
+  padding-bottom: 0.5rem;
+  scroll-padding-left: var(--gutter);
+}
+
+.expertise__rail:focus-visible {
+  outline-offset: -2px;
+}
+
+.skill-card {
+  flex: 0 0 auto;
+  width: min(84vw, 420px);
+  scroll-snap-align: start;
+}
+
+.skill-card__inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink-800);
+  border: 1px solid var(--line);
+  transition: border-color 0.5s var(--ease-out), transform 0.6s var(--ease-out),
+    background-color 0.5s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .skill-card:hover .skill-card__inner {
+    border-color: var(--amber-line);
+    background: var(--ink-700);
+    transform: translateY(-6px);
+  }
+}
+
+.skill-card__media {
+  border-bottom: 1px solid var(--line);
+}
+
+.skill-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: clamp(1.25rem, 2.4vw, 1.9rem);
+  flex: 1 1 auto;
+}
+
+.skill-card__top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+}
+
+.skill-card__index {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+}
+
+.skill-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.skill-card__summary {
+  font-size: var(--text-small);
+  color: var(--fg);
+}
+
+.skill-card__description {
+  font-size: 0.86rem;
+  color: var(--fg-dim);
+  line-height: 1.62;
+}
+
+.skill-card__points {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+.skill-card__points li {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.skill-card__points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 5px;
+  height: 1px;
+  background: var(--amber);
+}
+
+/* ------------------------------------------------------------- progress --- */
+
+.expertise__rail-progress {
+  position: relative;
+  height: 1px;
+  margin-top: clamp(1.25rem, 2.5vw, 2rem);
+  background: var(--line);
+  overflow: hidden;
+}
+
+.expertise__rail-progress-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--amber);
+  transform-origin: left;
+  transition: transform 0.2s linear;
+}
+
+.expertise__hint {
+  margin-top: 0.9rem;
+  font-size: 0.52rem;
+  letter-spacing: 0.24em;
+  color: var(--fg-ghost);
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.expertise__hint.is-dim {
+  opacity: 0.35;
+}
+
+@media (min-width: 1024px) {
+  .skill-card {
+    width: min(38vw, 440px);
+  }
+}

@@ -1,0 +1,267 @@
+/* ==========================================================================
+   Project detail modal
+   ========================================================================== */
+
+.project-modal {
+  max-width: 1280px;
+  background: var(--ink-800);
+}
+
+.project {
+  position: relative;
+}
+
+/* -------------------------------------------------------------- header ---- */
+
+.project__header {
+  position: relative;
+}
+
+.project__hero .frame__window {
+  aspect-ratio: 21 / 9;
+  max-height: 60vh;
+}
+
+.project__header-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.2vw, 1rem);
+  padding: clamp(1.25rem, 3vw, 2.75rem) clamp(1.25rem, 3vw, 3rem) 0;
+  margin-top: clamp(-3rem, -4vw, -2rem);
+}
+
+.project__eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.54rem;
+  letter-spacing: 0.24em;
+  color: var(--amber);
+}
+
+.project__position {
+  margin-left: auto;
+  color: var(--fg-ghost);
+}
+
+.project__title {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4.2rem);
+}
+
+.project__tagline {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.9vw, 1.6rem);
+  font-style: italic;
+  color: var(--fg-soft);
+  max-width: 48ch;
+}
+
+/* ---------------------------------------------------------------- body ---- */
+
+.project__body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  padding: clamp(1.75rem, 3.5vw, 3rem) clamp(1.25rem, 3vw, 3rem) clamp(2rem, 4vw, 3.5rem);
+}
+
+.project__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin: 0;
+  padding-block: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.project__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.project__meta-item dd {
+  margin: 0;
+  font-size: var(--text-small);
+  color: var(--fg);
+}
+
+.project__summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.project__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1.25rem;
+}
+
+.project__tags li {
+  padding: 0.35rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+  border: 1px solid var(--amber-line);
+}
+
+.project__approach {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.project__approach ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: var(--text-small);
+  color: var(--fg-soft);
+}
+
+.project__approach li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.project__approach li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 8px;
+  height: 1px;
+  background: var(--amber);
+}
+
+/* ------------------------------------------------------------- sections --- */
+
+.project__section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.project__section-head p {
+  font-size: 0.54rem;
+  letter-spacing: 0.18em;
+  color: var(--fg-faint);
+}
+
+.project__gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+}
+
+.project__gallery-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: left;
+  color: inherit;
+}
+
+.project__gallery-item .frame__window {
+  border: 1px solid var(--line);
+  transition: border-color 0.4s var(--ease-out);
+}
+
+.project__gallery-item:hover .frame__window,
+.project__gallery-item:focus-visible .frame__window {
+  border-color: var(--amber-line);
+}
+
+.project__gallery-caption {
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: var(--fg-faint);
+  line-height: 1.6;
+}
+
+/* -------------------------------------------------------------- credits --- */
+
+.project__credits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 1rem clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.project__credit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.project__credit-name {
+  font-size: var(--text-small);
+  color: var(--fg);
+}
+
+.project__awards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: clamp(1.25rem, 2.5vw, 2rem);
+  font-size: var(--text-small);
+  color: var(--fg-soft);
+}
+
+.project__awards li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.project__award-mark {
+  color: var(--amber);
+  font-size: 0.6rem;
+}
+
+/* ---------------------------------------------------------------- pager --- */
+
+.project__pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: clamp(1.25rem, 2.5vw, 2rem);
+  border-top: 1px solid var(--line);
+}
+
+.project__pager-btn {
+  padding: 0.85rem 1.25rem;
+  font-size: 0.54rem;
+  color: var(--fg-dim);
+  border: 1px solid var(--line-strong);
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.project__pager-btn:hover,
+.project__pager-btn:focus-visible {
+  color: var(--black);
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+/* ---------------------------------------------------------- breakpoints --- */
+
+@media (min-width: 900px) {
+  .project__summary {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+}

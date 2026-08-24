@@ -1,0 +1,634 @@
+/* ==========================================================================
+   UI primitives
+   ========================================================================== */
+
+/* --------------------------------------------------------- text reveal ---- */
+
+.text-reveal {
+  display: block;
+}
+
+.text-reveal__line {
+  display: block;
+}
+
+.text-reveal__mask {
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.06em;
+  margin-right: 0.26em;
+  clip-path: inset(-15% 0 0 0);
+}
+
+.text-reveal__word {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ------------------------------------------------------ section heading ---- */
+
+.section-heading {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.1rem, 1.8vw, 1.9rem);
+  max-width: 74ch;
+}
+
+.section-heading--center {
+  align-items: center;
+  text-align: center;
+  max-width: 68ch;
+  margin-inline: auto;
+}
+
+.section-heading__title {
+  margin: 0;
+}
+
+.section-heading__description {
+  max-width: 60ch;
+}
+
+/* --------------------------------------------------------------- frame ---- */
+
+.frame {
+  position: relative;
+  margin: 0;
+  display: block;
+}
+
+.frame__window {
+  position: relative;
+  aspect-ratio: var(--frame-ratio, 16 / 9);
+  overflow: hidden;
+  background:
+    radial-gradient(120% 120% at 50% 0%, var(--ink-600), var(--ink-800) 60%, var(--black));
+  isolation: isolate;
+}
+
+.frame__media {
+  position: absolute;
+  inset: -6% 0;
+  height: 112%;
+  will-change: transform;
+}
+
+.frame__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.9s var(--ease-out), transform 1.4s var(--ease-out), filter 0.9s var(--ease-out);
+}
+
+.frame.is-loaded .frame__img {
+  opacity: 1;
+}
+
+.frame__missing {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--fg-faint);
+  background: linear-gradient(135deg, var(--ink-700), var(--ink-900));
+  border: 1px solid var(--line);
+}
+
+/* Overlay grade — keeps every image sitting in the same colour world */
+.frame__grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(130% 100% at 50% 0%, transparent 40%, rgba(3, 3, 3, 0.5) 100%),
+    linear-gradient(180deg, rgba(3, 3, 3, 0.18), transparent 42%, rgba(3, 3, 3, 0.42));
+  mix-blend-mode: multiply;
+}
+
+.frame__curtain {
+  position: absolute;
+  inset: 0;
+  background: var(--ink-900);
+  transform-origin: bottom;
+  z-index: 2;
+}
+
+.frame__caption {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+.frame--zoom .frame__img {
+  transform: scale(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .frame--zoom:hover .frame__img,
+  .is-hovered .frame--zoom .frame__img {
+    transform: scale(1.06);
+    filter: saturate(1.08) contrast(1.03);
+  }
+}
+
+/* ------------------------------------------------------------ parallax ---- */
+
+.parallax {
+  position: relative;
+}
+
+.parallax__inner {
+  will-change: transform;
+}
+
+/* ------------------------------------------------------------- marquee ---- */
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.marquee--fade {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marquee__viewport {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll var(--marquee-duration, 32s) linear infinite;
+}
+
+.marquee__viewport--reverse {
+  animation-direction: reverse;
+}
+
+.marquee:hover .marquee__viewport {
+  animation-play-state: paused;
+}
+
+.marquee__track {
+  display: flex;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5.5rem);
+  padding-right: clamp(2rem, 5vw, 5.5rem);
+  flex: 0 0 auto;
+}
+
+.marquee__item {
+  flex: 0 0 auto;
+}
+
+.marquee--static {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.marquee--static .marquee__track {
+  width: max-content;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* --------------------------------------------------------------- modal ---- */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(0.75rem, 2.5vw, 2.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 3, 3, 0.86);
+  backdrop-filter: blur(14px) saturate(0.7);
+  -webkit-backdrop-filter: blur(14px) saturate(0.7);
+}
+
+.modal__panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1440px;
+  margin-block: auto;
+  background: var(--ink-800);
+  border: 1px solid var(--line);
+  box-shadow: 0 60px 140px -40px rgba(0, 0, 0, 0.9);
+}
+
+.modal--full .modal__panel {
+  max-width: min(1600px, 100%);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.modal__close {
+  position: absolute;
+  top: clamp(0.75rem, 1.6vw, 1.5rem);
+  right: clamp(0.75rem, 1.6vw, 1.5rem);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  color: var(--fg);
+  background: rgba(5, 5, 5, 0.7);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.modal__close:hover,
+.modal__close:focus-visible {
+  color: var(--amber);
+  border-color: var(--amber-line);
+  background: rgba(5, 5, 5, 0.92);
+}
+
+.modal__close-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.modal__close-icon span {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.modal__close-icon span:first-child {
+  transform: rotate(45deg);
+}
+
+.modal__close-icon span:last-child {
+  transform: rotate(-45deg);
+}
+
+.modal__close:hover .modal__close-icon span:first-child {
+  transform: rotate(135deg);
+}
+
+.modal__close:hover .modal__close-icon span:last-child {
+  transform: rotate(45deg);
+}
+
+.modal__close-text {
+  font-size: 0.62rem;
+}
+
+@media (max-width: 640px) {
+  .modal__close-text {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ lightbox ---- */
+
+.lightbox__panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.lightbox__inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  width: 100%;
+  padding-block: clamp(2.75rem, 5vw, 3.5rem) clamp(1rem, 2vw, 1.5rem);
+}
+
+.lightbox__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--fg-dim);
+}
+
+.lightbox__title {
+  color: var(--amber);
+}
+
+.lightbox__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: min(66vh, 720px);
+}
+
+.lightbox__figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.lightbox__img {
+  max-width: 100%;
+  max-height: min(72vh, 860px);
+  width: auto;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  background: var(--ink-800);
+}
+
+.lightbox__caption {
+  max-width: 68ch;
+  text-align: center;
+  font-size: var(--text-small);
+  color: var(--fg-soft);
+}
+
+.lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(44px, 4vw, 58px);
+  height: clamp(44px, 4vw, 58px);
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  color: var(--fg);
+  background: rgba(5, 5, 5, 0.6);
+  border: 1px solid var(--line);
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.lightbox__nav:hover,
+.lightbox__nav:focus-visible {
+  color: var(--black);
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+.lightbox__nav--prev {
+  left: 0;
+}
+
+.lightbox__nav--next {
+  right: 0;
+}
+
+.lightbox__thumbs {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+}
+
+.lightbox__thumb {
+  flex: 0 0 auto;
+  width: clamp(58px, 7vw, 96px);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  opacity: 0.42;
+  transition: opacity var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+
+.lightbox__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lightbox__thumb:hover,
+.lightbox__thumb:focus-visible {
+  opacity: 0.8;
+}
+
+.lightbox__thumb.is-active {
+  opacity: 1;
+  border-color: var(--amber);
+}
+
+.lightbox__hint {
+  color: var(--fg-faint);
+  text-align: center;
+  font-size: 0.6rem;
+}
+
+@media (max-width: 767px) {
+  .lightbox__nav {
+    bottom: 0;
+    top: auto;
+    transform: none;
+  }
+
+  .lightbox__nav--prev {
+    left: 0;
+  }
+
+  .lightbox__nav--next {
+    right: 0;
+  }
+
+  .lightbox__hint {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------- field ---- */
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 1.35rem;
+}
+
+.field__label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.field:focus-within .field__label {
+  color: var(--amber);
+}
+
+.field__required {
+  color: var(--amber);
+}
+
+.field__optional {
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  color: var(--fg-ghost);
+}
+
+.field__control {
+  width: 100%;
+  padding: 0.7rem 0 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--fg);
+  background: transparent;
+  border-bottom: 1px solid var(--line-strong);
+  transition: border-color var(--dur-fast) var(--ease-out);
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+.field__control::placeholder {
+  color: var(--fg-ghost);
+}
+
+.field__control:focus {
+  outline: none;
+  border-bottom-color: var(--amber-line);
+}
+
+.field__control:disabled {
+  color: var(--fg-faint);
+  cursor: not-allowed;
+}
+
+textarea.field__control {
+  resize: vertical;
+  min-height: 7.5rem;
+  line-height: 1.65;
+}
+
+/* The amber underline that draws in on focus */
+.field__line {
+  position: absolute;
+  left: 0;
+  bottom: 1.35rem;
+  width: 100%;
+  height: 1px;
+  background: var(--amber);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-out);
+  pointer-events: none;
+}
+
+.field:focus-within .field__line {
+  transform: scaleX(1);
+}
+
+.field__select-wrap {
+  position: relative;
+  display: block;
+}
+
+.field__control--select {
+  padding-right: 2rem;
+  cursor: pointer;
+  color: var(--fg);
+}
+
+.field__control--select option {
+  background: var(--ink-700);
+  color: var(--fg);
+}
+
+.field__chevron {
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  transform: translateY(-60%);
+  font-size: 0.7rem;
+  color: var(--fg-faint);
+  pointer-events: none;
+}
+
+/* Date inputs: make the native picker legible on a dark ground */
+input[type='date'].field__control::-webkit-calendar-picker-indicator {
+  filter: invert(0.85) sepia(0.3) saturate(3) hue-rotate(2deg);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+input[type='date'].field__control::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.field__hint,
+.field__error {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.field__hint {
+  color: var(--fg-faint);
+}
+
+.field__error {
+  color: #e8836f;
+}
+
+.field--error .field__control {
+  border-bottom-color: rgba(232, 131, 111, 0.6);
+}
+
+.field--error .field__label {
+  color: #e8836f;
+}
+
+/* ------------------------------------------------------------- spinner ---- */
+
+.spinner {
+  display: inline-flex;
+  width: 1em;
+  height: 1em;
+}
+
+.spinner svg {
+  width: 100%;
+  height: 100%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

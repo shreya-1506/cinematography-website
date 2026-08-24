@@ -1,0 +1,25 @@
+{
+  "name": "prathamesh-patil-cinematographer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Cinematic portfolio website for cinematographer Prathamesh Patil.",
+  "scripts": {
+    "assets": "node scripts/generate-placeholders.mjs",
+    "predev": "node scripts/generate-placeholders.mjs --if-missing",
+    "dev": "vite",
+    "prebuild": "node scripts/generate-placeholders.mjs --if-missing",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "framer-motion": "^13.1.1",
+    "lenis": "^1.3.26",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.0",
+    "vite": "^8.2.2"
+  }
+}

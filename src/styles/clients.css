@@ -1,0 +1,51 @@
+/* ==========================================================================
+   Client / collaborator logos
+   ========================================================================== */
+
+.clients {
+  padding-block: clamp(3rem, 7vw, 6rem);
+  background: var(--black);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.clients__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(0.75rem, 2vw, 2rem);
+}
+
+.clients__title {
+  color: var(--fg-soft);
+}
+
+.clients__marquee {
+  margin-top: clamp(1.75rem, 3.5vw, 3rem);
+}
+
+.clients__link {
+  display: block;
+}
+
+.clients__logo {
+  display: grid;
+  place-items: center;
+  height: clamp(34px, 4vw, 52px);
+}
+
+.clients__logo img {
+  height: 100%;
+  width: auto;
+  opacity: 0.4;
+  filter: grayscale(1);
+  transition: opacity 0.5s var(--ease-out), filter 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.clients__link:hover .clients__logo img,
+.clients__link:focus-visible .clients__logo img {
+  opacity: 0.95;
+  filter: grayscale(0);
+  transform: translateY(-2px);
+}
