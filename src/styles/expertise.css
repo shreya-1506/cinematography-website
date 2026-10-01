@@ -196,3 +196,23 @@
     width: min(38vw, 440px);
   }
 }
+
+/* Discipline icon, pinned to the right of the card title row */
+.skill-card__top {
+  position: relative;
+}
+
+.skill-card__icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.3rem;
+  height: 1.3rem;
+  opacity: 0.55;
+  transition: opacity 0.4s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.skill-card:hover .skill-card__icon {
+  opacity: 1;
+  transform: translateY(-2px);
+}

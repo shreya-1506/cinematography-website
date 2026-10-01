@@ -8,9 +8,13 @@
     "assets": "node scripts/generate-placeholders.mjs",
     "predev": "node scripts/generate-placeholders.mjs --if-missing",
     "dev": "vite",
-    "prebuild": "node scripts/generate-placeholders.mjs --if-missing",
+    "prebuild": "node scripts/generate-placeholders.mjs --if-missing && node scripts/generate-seo.mjs",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:ghpages": "node scripts/build-base.mjs cinematography-website",
+    "admin:credentials": "node scripts/admin-credentials.mjs",
+    "seo": "node scripts/generate-seo.mjs",
+    "postbuild": "node scripts/postbuild.mjs"
   },
   "dependencies": {
     "framer-motion": "^13.1.1",
@@ -21,5 +25,8 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^6.1.0",
     "vite": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.19"
   }
 }

@@ -1,0 +1,39 @@
+# Netlify deployment for the cinematographer portfolio.
+# Connect the repo at app.netlify.com and these settings are picked up
+# automatically — nothing to fill in by hand.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Leave the admin editor out of the public build. Edit content locally with
+  # `npm run dev` and commit public/content.json instead.
+  VITE_ADMIN_ENABLED = "false"
+
+# The site is a single page, but this keeps deep links and the #/admin hash
+# working if you ever add routes.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Generated art and hashed bundles are safe to cache hard.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Content must never be cached, or edits will not show up.
+[[headers]]
+  for = "/content.json"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"

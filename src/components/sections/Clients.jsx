@@ -23,7 +23,7 @@ export default function Clients({ clients }) {
           {clients.logos.map((logo) => {
             const content = (
               <span className="clients__logo">
-                <img src={logo.src} alt={logo.name} loading="lazy" decoding="async" />
+                {logo.src ? <img src={logo.src} alt={logo.name} loading="lazy" decoding="async" /> : null}
               </span>
             );
             return logo.url ? (

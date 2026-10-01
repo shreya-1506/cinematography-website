@@ -265,3 +265,8 @@
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   }
 }
+
+/* Cinematography DNA inside the project modal */
+.project__dna {
+  display: block;
+}

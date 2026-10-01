@@ -48,6 +48,7 @@ export const PALETTES = {
   studio: { deep: '#040404', mid: '#101010', low: '#252525', accent: '#d8d2c6', glow: '#ffffff' },
   crimson: { deep: '#07030a', mid: '#1a0810', low: '#3f101d', accent: '#d8506a', glow: '#ffb3c0' },
   ice: { deep: '#03060a', mid: '#0a1420', low: '#1b3346', accent: '#9fc4d8', glow: '#e8f5ff' },
+  graphite: { deep: '#121110', mid: '#1b1a17', low: '#26241f', accent: '#bdb5a5', glow: '#efe9dc' },
   sepia: { deep: '#0a0806', mid: '#1b140d', low: '#45331f', accent: '#c9a15e', glow: '#f0dcb4' },
   indigo: { deep: '#03040c', mid: '#0a0e22', low: '#1a2350', accent: '#8f9ff0', glow: '#dfe4ff' },
   ember: { deep: '#080402', mid: '#1c0d05', low: '#4a1d09', accent: '#ff8a3d', glow: '#ffd0a0' },
@@ -365,6 +366,537 @@ const motifs = {
       }
       out += '<g fill="' + colors[layer] + '" opacity="' + fmt(0.55 + layer * 0.18) + '">' + heads + '</g>';
     }
+    return out;
+  },
+
+  /** Graphite storyboard panel: crop marks, rough blocking, a movement arrow. */
+  storyboard(w, h, p, r) {
+    const ink = p.glow;
+    const m = Math.min(w, h) * 0.07;
+    let out = rect(0, 0, w, h, ' fill="' + p.mid + '"');
+
+    // Paper tooth
+    let tooth = '';
+    for (let i = 0; i < 90; i += 1) {
+      tooth += rect(r.range(0, w), r.range(0, h), r.range(1, 3), r.range(1, 3), ' opacity="' + fmt(r.range(0.02, 0.07)) + '"');
+    }
+    out += '<g fill="' + ink + '">' + tooth + '</g>';
+
+    // Panel border + corner crop marks
+    out += rect(m, m, w - m * 2, h - m * 2, ' fill="none" stroke="' + ink + '" stroke-width="' + fmt(w * 0.0022) + '" opacity="0.34"');
+    const corner = Math.min(w, h) * 0.05;
+    const marks = [
+      [m, m, 1, 1],
+      [w - m, m, -1, 1],
+      [m, h - m, 1, -1],
+      [w - m, h - m, -1, -1],
+    ];
+    out += '<g stroke="' + ink + '" stroke-width="' + fmt(w * 0.003) + '" opacity="0.6">';
+    marks.forEach(([x, y, sx, sy]) => {
+      out += '<line x1="' + fmt(x) + '" y1="' + fmt(y) + '" x2="' + fmt(x + corner * sx) + '" y2="' + fmt(y) + '"/>';
+      out += '<line x1="' + fmt(x) + '" y1="' + fmt(y) + '" x2="' + fmt(x) + '" y2="' + fmt(y + corner * sy) + '"/>';
+    });
+    out += '</g>';
+
+    // Horizon + ground hatching
+    const horizon = h * r.range(0.54, 0.66);
+    out += '<line x1="' + fmt(m) + '" y1="' + fmt(horizon) + '" x2="' + fmt(w - m) + '" y2="' + fmt(horizon) +
+      '" stroke="' + ink + '" stroke-width="' + fmt(w * 0.0022) + '" opacity="0.45"/>';
+    let hatch = '';
+    for (let i = 0; i < 26; i += 1) {
+      const x = r.range(m, w - m);
+      const len = r.range(h * 0.03, h * 0.11);
+      hatch += '<line x1="' + fmt(x) + '" y1="' + fmt(horizon) + '" x2="' + fmt(x - len * 0.5) + '" y2="' + fmt(horizon + len) + '"/>';
+    }
+    out += '<g stroke="' + ink + '" stroke-width="' + fmt(w * 0.0016) + '" opacity="0.2">' + hatch + '</g>';
+
+    // Blocked figures
+    const figures = r.int(1, 2);
+    for (let i = 0; i < figures; i += 1) {
+      const fx = w * (figures === 1 ? r.range(0.32, 0.6) : 0.3 + i * 0.3);
+      const scale = r.range(0.72, 1.05) * (h / 900);
+      const headR = 34 * scale;
+      const headY = horizon - 250 * scale;
+      out += '<g stroke="' + ink + '" stroke-width="' + fmt(w * 0.0026) + '" fill="none" opacity="0.7">';
+      out += circle(fx, headY, headR);
+      out += '<line x1="' + fmt(fx) + '" y1="' + fmt(headY + headR) + '" x2="' + fmt(fx) + '" y2="' + fmt(horizon - 70 * scale) + '"/>';
+      out += '<line x1="' + fmt(fx - 60 * scale) + '" y1="' + fmt(headY + 110 * scale) + '" x2="' + fmt(fx + 58 * scale) + '" y2="' + fmt(headY + 96 * scale) + '"/>';
+      out += '<line x1="' + fmt(fx) + '" y1="' + fmt(horizon - 70 * scale) + '" x2="' + fmt(fx - 48 * scale) + '" y2="' + fmt(horizon) + '"/>';
+      out += '<line x1="' + fmt(fx) + '" y1="' + fmt(horizon - 70 * scale) + '" x2="' + fmt(fx + 46 * scale) + '" y2="' + fmt(horizon) + '"/>';
+      out += '</g>';
+    }
+
+    // Movement arrow
+    const ay = h * r.range(0.76, 0.85);
+    const ax1 = w * 0.24;
+    const ax2 = w * 0.7;
+    out += '<g stroke="' + ink + '" stroke-width="' + fmt(w * 0.0028) + '" fill="none" opacity="0.6">';
+    out += '<line x1="' + fmt(ax1) + '" y1="' + fmt(ay) + '" x2="' + fmt(ax2) + '" y2="' + fmt(ay) + '"/>';
+    out += '<polyline points="' + fmt(ax2 - w * 0.02) + ',' + fmt(ay - h * 0.016) + ' ' + fmt(ax2) + ',' + fmt(ay) +
+      ' ' + fmt(ax2 - w * 0.02) + ',' + fmt(ay + h * 0.016) + '"/>';
+    out += '</g>';
+
+    return out;
+  },
+
+  /** Contact sheet: a grid of miniature frames with sprocket perforations. */
+  contactsheet(w, h, p, r) {
+    const cols = 4;
+    const rows = 3;
+    const pad = w * 0.045;
+    const sprocket = h * 0.05;
+    let out = rect(0, 0, w, h, ' fill="' + p.deep + '"');
+
+    // Perforations
+    let holes = '';
+    const holeW = w * 0.014;
+    for (let x = pad * 0.4; x < w - holeW; x += holeW * 2.1) {
+      holes += rect(x, sprocket * 0.32, holeW, sprocket * 0.34, ' rx="' + fmt(holeW * 0.22) + '"');
+      holes += rect(x, h - sprocket * 0.66, holeW, sprocket * 0.34, ' rx="' + fmt(holeW * 0.22) + '"');
+    }
+    out += '<g fill="' + p.glow + '" opacity="0.14">' + holes + '</g>';
+
+    const gridTop = sprocket * 1.1;
+    const gridH = h - sprocket * 2.2;
+    const cellW = (w - pad * 2 - w * 0.012 * (cols - 1)) / cols;
+    const cellH = (gridH - h * 0.02 * (rows - 1)) / rows;
+    const shapes = ['portrait', 'skyline', 'dunes', 'sea', 'interior', 'crowd', 'mountains'];
+
+    for (let row = 0; row < rows; row += 1) {
+      for (let col = 0; col < cols; col += 1) {
+        const x = pad + col * (cellW + w * 0.012);
+        const y = gridTop + row * (cellH + h * 0.02);
+        const tone = r.range(0.35, 1);
+        out += '<g>';
+        out += rect(x, y, cellW, cellH * 0.86, ' fill="' + p.mid + '"');
+        out += rect(x, y, cellW, cellH * 0.86, ' fill="' + p.low + '" opacity="' + fmt(tone * 0.7) + '"');
+
+        // A suggestion of a subject inside each frame
+        const kind = r.pick(shapes);
+        const cx = x + cellW / 2;
+        const base = y + cellH * 0.86;
+        if (kind === 'portrait') {
+          out += circle(cx, y + cellH * 0.34, cellH * 0.11, ' fill="' + p.deep + '" opacity="0.85"');
+          out += ellipse(cx, base, cellH * 0.3, cellH * 0.32, ' fill="' + p.deep + '" opacity="0.85"');
+        } else if (kind === 'skyline' || kind === 'crowd') {
+          let bl = '';
+          for (let b = 0; b < 6; b += 1) {
+            const bw = cellW / 7;
+            bl += rect(x + b * bw * 1.16, base - cellH * r.range(0.15, 0.5), bw, cellH * 0.5);
+          }
+          out += '<g fill="' + p.deep + '" opacity="0.8">' + bl + '</g>';
+        } else if (kind === 'mountains') {
+          out += '<polygon points="' + fmt(x) + ',' + fmt(base) + ' ' + fmt(cx) + ',' + fmt(y + cellH * 0.24) +
+            ' ' + fmt(x + cellW) + ',' + fmt(base) + '" fill="' + p.deep + '" opacity="0.8"/>';
+        } else {
+          out += rect(x, y + cellH * r.range(0.4, 0.6), cellW, cellH * 0.4, ' fill="' + p.deep + '" opacity="0.75"');
+        }
+        out += rect(x, y, cellW, cellH * 0.86, ' fill="none" stroke="' + p.glow + '" stroke-width="' + fmt(w * 0.0012) + '" opacity="0.12"');
+        // Frame number
+        out += rect(x, y + cellH * 0.9, cellW * r.range(0.18, 0.34), cellH * 0.045, ' fill="' + p.accent + '" opacity="0.32"');
+        out += '</g>';
+      }
+    }
+    return out;
+  },
+
+  /* ------------------------------------------------------------------------ */
+  /*  Equipment. Silhouette plus a rim light, shot against a soft falloff, so  */
+  /*  the gear reads as a photograph rather than an icon.                      */
+  /* ------------------------------------------------------------------------ */
+
+  /** Cinema camera on rods: matte box, prime, EVF, top handle, monitor. */
+  camera(w, h, p, r) {
+    const s = Math.min(w / 1600, h / 900);
+    const cx = w * r.range(0.44, 0.54);
+    const cy = h * 0.56;
+    const body = { w: 300 * s, h: 210 * s };
+    const ink = p.deep;
+    const rim = p.glow;
+    const line = ' fill="' + ink + '"';
+
+    let out = '';
+
+    // Bokeh behind the subject
+    let bokeh = '';
+    for (let i = 0; i < 14; i += 1) {
+      bokeh += circle(r.range(0, w), r.range(0, h * 0.72), r.range(w * 0.008, w * 0.032),
+        ' opacity="' + fmt(r.range(0.05, 0.2)) + '"');
+    }
+    out += '<g fill="' + p.glow + '">' + bokeh + '</g>';
+
+    // Table / floor falloff
+    out += rect(0, cy + body.h * 0.62, w, h, ' fill="' + p.deep + '" opacity="0.72"');
+
+    const bx = cx - body.w / 2;
+    const by = cy - body.h / 2;
+
+    out += '<g>';
+    // Body
+    out += rect(bx, by, body.w, body.h, ' rx="' + fmt(14 * s) + '"' + line);
+    // Side plate detail
+    out += rect(bx + 26 * s, by + 34 * s, body.w - 120 * s, body.h - 96 * s,
+      ' rx="' + fmt(6 * s) + '" fill="' + p.mid + '" opacity="0.7"');
+    // Record lamp
+    out += circle(bx + body.w - 40 * s, by + 40 * s, 9 * s, ' fill="' + p.accent + '" opacity="0.9"');
+
+    // Top handle
+    out += rect(bx + 54 * s, by - 60 * s, body.w - 120 * s, 22 * s, ' rx="' + fmt(10 * s) + '"' + line);
+    out += rect(bx + 70 * s, by - 44 * s, 20 * s, 46 * s + 2, line);
+    out += rect(bx + body.w - 108 * s, by - 44 * s, 20 * s, 46 * s + 2, line);
+
+    // Rods forward
+    out += rect(bx + body.w - 6 * s, cy - 34 * s, 250 * s, 13 * s, ' rx="' + fmt(6 * s) + '"' + line);
+    out += rect(bx + body.w - 6 * s, cy + 24 * s, 250 * s, 13 * s, ' rx="' + fmt(6 * s) + '"' + line);
+
+    // Lens barrel + focus ring
+    const lx = bx + body.w;
+    out += rect(lx, cy - 62 * s, 150 * s, 124 * s, ' rx="' + fmt(10 * s) + '"' + line);
+    for (let i = 0; i < 3; i += 1) {
+      out += rect(lx + (26 + i * 34) * s, cy - 62 * s, 12 * s, 124 * s, ' fill="' + p.mid + '" opacity="0.85"');
+    }
+
+    // Matte box + french flag
+    const mx = lx + 150 * s;
+    out += rect(mx, cy - 96 * s, 132 * s, 192 * s, ' rx="' + fmt(8 * s) + '"' + line);
+    out += rect(mx - 6 * s, cy - 138 * s, 156 * s, 46 * s, ' rx="' + fmt(5 * s) + '"' + line);
+    // Front element, coated
+    out += ellipse(mx + 132 * s, cy, 16 * s, 74 * s, ' fill="' + p.mid + '"');
+    out += ellipse(mx + 136 * s, cy, 9 * s, 58 * s, ' fill="' + p.accent + '" opacity="0.35"');
+
+    // Viewfinder
+    out += rect(bx - 96 * s, cy - 58 * s, 104 * s, 56 * s, ' rx="' + fmt(12 * s) + '"' + line);
+    out += ellipse(bx - 96 * s, cy - 30 * s, 20 * s, 32 * s, line);
+
+    // Monitor on an arm
+    out += rect(bx + 40 * s, by - 150 * s, 150 * s, 96 * s, ' rx="' + fmt(6 * s) + '"' + line);
+    out += rect(bx + 50 * s, by - 140 * s, 130 * s, 76 * s,
+      ' fill="' + p.low + '" opacity="0.85"');
+    out += rect(bx + 108 * s, by - 54 * s, 12 * s, 30 * s, line);
+
+    // Follow focus + shoulder pad
+    out += circle(lx + 40 * s, cy + 78 * s, 34 * s, line);
+    out += circle(lx + 40 * s, cy + 78 * s, 16 * s, ' fill="' + p.mid + '"');
+    out += rect(bx + 30 * s, cy + body.h / 2, 210 * s, 34 * s, ' rx="' + fmt(16 * s) + '"' + line);
+    out += '</g>';
+
+    // Rim light along the top edges
+    out += '<g fill="none" stroke="' + rim + '" stroke-width="' + fmt(3 * s) + '" opacity="0.5">';
+    out += '<path d="M ' + fmt(bx + 14 * s) + ' ' + fmt(by) + ' L ' + fmt(bx + body.w - 14 * s) + ' ' + fmt(by) + '"/>';
+    out += '<path d="M ' + fmt(mx) + ' ' + fmt(cy - 96 * s) + ' L ' + fmt(mx + 132 * s) + ' ' + fmt(cy - 96 * s) + '"/>';
+    out += '<path d="M ' + fmt(bx + 54 * s) + ' ' + fmt(by - 60 * s) + ' L ' + fmt(bx + body.w - 66 * s) + ' ' + fmt(by - 60 * s) + '"/>';
+    out += '</g>';
+
+    return out;
+  },
+
+  /** Lighting fixtures: fresnel with barn doors, softbox, tube, and beams. */
+  lights(w, h, p, r) {
+    const s = Math.min(w / 1600, h / 900);
+    const floor = h * 0.86;
+    const ink = p.deep;
+    let out = rect(0, floor, w, h - floor, ' fill="' + p.deep + '" opacity="0.85"');
+
+    const stand = (x, headY, kind) => {
+      let g = '';
+      // Pole + tripod base
+      g += rect(x - 5 * s, headY, 10 * s, floor - headY, ' fill="' + ink + '"');
+      g += '<g stroke="' + ink + '" stroke-width="' + fmt(8 * s) + '" stroke-linecap="round">';
+      g += '<line x1="' + fmt(x) + '" y1="' + fmt(floor - 90 * s) + '" x2="' + fmt(x - 70 * s) + '" y2="' + fmt(floor) + '"/>';
+      g += '<line x1="' + fmt(x) + '" y1="' + fmt(floor - 90 * s) + '" x2="' + fmt(x + 70 * s) + '" y2="' + fmt(floor) + '"/>';
+      g += '<line x1="' + fmt(x) + '" y1="' + fmt(floor - 90 * s) + '" x2="' + fmt(x + 8 * s) + '" y2="' + fmt(floor) + '"/>';
+      g += '</g>';
+
+      if (kind === 'fresnel') {
+        const bw = 150 * s;
+        const bh = 130 * s;
+        // Beam
+        g += '<polygon points="' + fmt(x + bw * 0.5) + ',' + fmt(headY + 10 * s) + ' ' +
+          fmt(x + bw * 0.5) + ',' + fmt(headY + bh - 10 * s) + ' ' + fmt(w) + ',' + fmt(headY + bh * 2.4) +
+          ' ' + fmt(w) + ',' + fmt(headY - bh * 1.2) + '" fill="' + p.glow + '" opacity="0.09"/>';
+        // Housing + barn doors
+        g += rect(x - bw * 0.5, headY, bw, bh, ' rx="' + fmt(10 * s) + '" fill="' + ink + '"');
+        g += ellipse(x + bw * 0.5, headY + bh / 2, 12 * s, bh * 0.4, ' fill="' + p.glow + '" opacity="0.8"');
+        g += '<g fill="' + ink + '">';
+        g += '<polygon points="' + fmt(x + bw * 0.45) + ',' + fmt(headY) + ' ' + fmt(x + bw * 1.0) + ',' + fmt(headY - 44 * s) +
+          ' ' + fmt(x + bw * 1.0) + ',' + fmt(headY - 20 * s) + ' ' + fmt(x + bw * 0.45) + ',' + fmt(headY + 12 * s) + '"/>';
+        g += '<polygon points="' + fmt(x + bw * 0.45) + ',' + fmt(headY + bh) + ' ' + fmt(x + bw * 1.0) + ',' + fmt(headY + bh + 44 * s) +
+          ' ' + fmt(x + bw * 1.0) + ',' + fmt(headY + bh + 20 * s) + ' ' + fmt(x + bw * 0.45) + ',' + fmt(headY + bh - 12 * s) + '"/>';
+        g += '</g>';
+        // Knob + cable
+        g += circle(x - bw * 0.5 - 8 * s, headY + bh * 0.7, 14 * s, ' fill="' + ink + '"');
+      } else if (kind === 'softbox') {
+        const bw = 190 * s;
+        const bh = 240 * s;
+        g += rect(x - bw * 0.5, headY, bw, bh, ' rx="' + fmt(8 * s) + '" fill="' + ink + '"');
+        g += rect(x - bw * 0.5 + 14 * s, headY + 14 * s, bw - 28 * s, bh - 28 * s,
+          ' fill="' + p.glow + '" opacity="0.34"');
+        // Diffusion glow
+        g += rect(x - bw * 0.9, headY - bh * 0.2, bw * 1.8, bh * 1.4,
+          ' fill="' + p.glow + '" opacity="0.05"');
+      } else {
+        // LED tube
+        const th = 300 * s;
+        g += rect(x - 11 * s, headY, 22 * s, th, ' rx="' + fmt(11 * s) + '" fill="' + ink + '"');
+        g += rect(x - 6 * s, headY + 8 * s, 12 * s, th - 16 * s,
+          ' rx="' + fmt(6 * s) + '" fill="' + p.accent + '" opacity="0.85"');
+        g += rect(x - 40 * s, headY - 20 * s, 80 * s, th + 40 * s,
+          ' fill="' + p.accent + '" opacity="0.07"');
+      }
+      return g;
+    };
+
+    out += stand(w * 0.2, h * 0.3, 'fresnel');
+    out += stand(w * 0.56, h * 0.22, 'softbox');
+    out += stand(w * 0.82, h * 0.34, 'tube');
+
+    // Coiled cable on the floor
+    out += '<g fill="none" stroke="' + ink + '" stroke-width="' + fmt(9 * s) + '" opacity="0.9">';
+    out += '<path d="M ' + fmt(w * 0.1) + ' ' + fmt(floor + (h - floor) * 0.45) +
+      ' q ' + fmt(w * 0.09) + ' ' + fmt(-(h - floor) * 0.3) + ' ' + fmt(w * 0.18) + ' 0' +
+      ' q ' + fmt(w * 0.09) + ' ' + fmt((h - floor) * 0.3) + ' ' + fmt(w * 0.18) + ' 0"/>';
+    out += '</g>';
+
+    return out;
+  },
+
+  /** Sound kit: shotgun mic in a blimp on a boom pole, plus a mixer bag. */
+  mic(w, h, p, r) {
+    const s = Math.min(w / 1600, h / 900);
+    const ink = p.deep;
+    const rim = p.glow;
+    let out = '';
+
+    // Soft background falloff
+    out += rect(0, h * 0.78, w, h * 0.22, ' fill="' + p.deep + '" opacity="0.7"');
+
+    // Boom pole, running corner to corner
+    const x1 = w * 0.06;
+    const y1 = h * 0.86;
+    const x2 = w * 0.62;
+    const y2 = h * 0.3;
+    const ang = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+
+    out += '<g stroke="' + ink + '" stroke-width="' + fmt(20 * s) + '" stroke-linecap="round">';
+    out += '<line x1="' + fmt(x1) + '" y1="' + fmt(y1) + '" x2="' + fmt(x2) + '" y2="' + fmt(y2) + '"/>';
+    out += '</g>';
+    // Pole collar
+    out += '<g transform="translate(' + fmt(w * 0.3) + ',' + fmt(h * 0.6) + ') rotate(' + fmt(ang) + ')">';
+    out += rect(-18 * s, -16 * s, 36 * s, 32 * s, ' rx="' + fmt(6 * s) + '" fill="' + p.mid + '"');
+    out += '</g>';
+
+    // Blimp + shock mount at the far end
+    out += '<g transform="translate(' + fmt(x2) + ',' + fmt(y2) + ') rotate(' + fmt(ang) + ')">';
+    // Windshield basket
+    const bl = 420 * s;
+    const bh = 92 * s;
+    out += rect(0, -bh / 2, bl, bh, ' rx="' + fmt(bh / 2) + '" fill="' + ink + '"');
+    // Lattice
+    out += '<g stroke="' + p.mid + '" stroke-width="' + fmt(3 * s) + '" opacity="0.75">';
+    for (let i = 1; i < 9; i += 1) {
+      const lx = (bl / 9) * i;
+      out += '<line x1="' + fmt(lx) + '" y1="' + fmt(-bh / 2 + 6 * s) + '" x2="' + fmt(lx) + '" y2="' + fmt(bh / 2 - 6 * s) + '"/>';
+    }
+    out += '<line x1="' + fmt(10 * s) + '" y1="0" x2="' + fmt(bl - 10 * s) + '" y2="0"/>';
+    out += '</g>';
+    // Rim light along the top of the blimp
+    out += '<path d="M ' + fmt(bh * 0.4) + ' ' + fmt(-bh / 2) + ' L ' + fmt(bl - bh * 0.4) + ' ' + fmt(-bh / 2) +
+      '" fill="none" stroke="' + rim + '" stroke-width="' + fmt(3.5 * s) + '" opacity="0.55"/>';
+    // Shock-mount cradle
+    out += rect(-46 * s, -bh * 0.78, 46 * s, bh * 1.56, ' rx="' + fmt(8 * s) + '" fill="' + ink + '"');
+    out += '<g stroke="' + p.accent + '" stroke-width="' + fmt(3 * s) + '" opacity="0.55">';
+    out += '<line x1="' + fmt(-40 * s) + '" y1="' + fmt(-bh * 0.7) + '" x2="' + fmt(-6 * s) + '" y2="' + fmt(-bh * 0.1) + '"/>';
+    out += '<line x1="' + fmt(-40 * s) + '" y1="' + fmt(bh * 0.7) + '" x2="' + fmt(-6 * s) + '" y2="' + fmt(bh * 0.1) + '"/>';
+    out += '</g>';
+    out += '</g>';
+
+    // Mixer bag with faders and knobs
+    const mx = w * 0.7;
+    const my = h * 0.62;
+    const mw = 300 * s;
+    const mh = 200 * s;
+    out += rect(mx, my, mw, mh, ' rx="' + fmt(12 * s) + '" fill="' + ink + '"');
+    out += rect(mx + 18 * s, my + 18 * s, mw - 36 * s, mh * 0.42, ' fill="' + p.low + '" opacity="0.8"');
+    // Meters
+    for (let i = 0; i < 6; i += 1) {
+      out += rect(mx + (30 + i * 40) * s, my + 30 * s, 22 * s, mh * 0.28 * r.range(0.35, 1),
+        ' fill="' + p.accent + '" opacity="' + fmt(r.range(0.4, 0.95)) + '"');
+    }
+    // Faders
+    for (let i = 0; i < 4; i += 1) {
+      const fx = mx + (40 + i * 66) * s;
+      out += rect(fx, my + mh * 0.56, 8 * s, mh * 0.32, ' fill="' + p.mid + '"');
+      out += rect(fx - 12 * s, my + mh * 0.56 + mh * 0.32 * r.range(0.1, 0.8), 32 * s, 16 * s,
+        ' rx="' + fmt(4 * s) + '" fill="' + p.glow + '" opacity="0.55"');
+    }
+    // Strap
+    out += '<path d="M ' + fmt(mx + 20 * s) + ' ' + fmt(my) + ' q ' + fmt(mw * 0.45) + ' ' + fmt(-mh * 0.75) + ' ' + fmt(mw - 40 * s) + ' 0" fill="none" stroke="' + ink + '" stroke-width="' + fmt(14 * s) + '"/>';
+
+    return out;
+  },
+
+  /** 35mm film strip running across the frame, each cell holding an image. */
+  filmstrip(w, h, p, r) {
+    const s = Math.min(w / 1600, h / 900);
+    const stripH = h * 0.52;
+    const y = (h - stripH) / 2 + h * r.range(-0.04, 0.04);
+    const tilt = r.range(-7, 7);
+    const perf = stripH * 0.13;
+
+    let out = '';
+    // Light coming through the strip
+    out += rect(0, y - stripH * 0.3, w, stripH * 1.6, ' fill="' + p.glow + '" opacity="0.05"');
+
+    out += '<g transform="rotate(' + fmt(tilt) + ' ' + fmt(w / 2) + ' ' + fmt(h / 2) + ')">';
+    // Base
+    out += rect(-w * 0.1, y, w * 1.2, stripH, ' fill="' + p.deep + '"');
+    // Perforations
+    let holes = '';
+    const holeW = stripH * 0.075;
+    for (let x = -w * 0.08; x < w * 1.15; x += holeW * 2.1) {
+      holes += rect(x, y + perf * 0.32, holeW, perf * 0.5, ' rx="' + fmt(holeW * 0.2) + '"');
+      holes += rect(x, y + stripH - perf * 0.82, holeW, perf * 0.5, ' rx="' + fmt(holeW * 0.2) + '"');
+    }
+    out += '<g fill="' + p.glow + '" opacity="0.22">' + holes + '</g>';
+
+    // Frames
+    const cellH = stripH - perf * 2.1;
+    const cellW = cellH * 1.38;
+    const gap = cellW * 0.07;
+    let i = 0;
+    for (let x = -cellW * 0.6; x < w * 1.1; x += cellW + gap) {
+      const cy = y + perf * 1.05;
+      out += rect(x, cy, cellW, cellH, ' fill="' + p.mid + '"');
+      out += rect(x, cy, cellW, cellH, ' fill="' + p.low + '" opacity="' + fmt(r.range(0.3, 0.9)) + '"');
+      // A subject inside the cell
+      const kind = i % 3;
+      const ccx = x + cellW / 2;
+      if (kind === 0) {
+        out += circle(ccx, cy + cellH * 0.36, cellH * 0.13, ' fill="' + p.deep + '" opacity="0.9"');
+        out += ellipse(ccx, cy + cellH, cellH * 0.34, cellH * 0.36, ' fill="' + p.deep + '" opacity="0.9"');
+      } else if (kind === 1) {
+        out += '<polygon points="' + fmt(x) + ',' + fmt(cy + cellH) + ' ' + fmt(ccx) + ',' + fmt(cy + cellH * 0.3) +
+          ' ' + fmt(x + cellW) + ',' + fmt(cy + cellH) + '" fill="' + p.deep + '" opacity="0.85"/>';
+      } else {
+        out += rect(x, cy + cellH * 0.55, cellW, cellH * 0.45, ' fill="' + p.deep + '" opacity="0.8"');
+        out += circle(x + cellW * 0.72, cy + cellH * 0.3, cellH * 0.08, ' fill="' + p.accent + '" opacity="0.7"');
+      }
+      out += rect(x, cy, cellW, cellH, ' fill="none" stroke="' + p.glow + '" stroke-width="' + fmt(2 * s) + '" opacity="0.1"');
+      i += 1;
+    }
+    out += '</g>';
+    return out;
+  },
+
+  /** Clapperboard, held at an angle. */
+  slate(w, h, p, r) {
+    const s = Math.min(w / 1600, h / 900);
+    const bw = w * 0.52;
+    const bh = bw * 0.66;
+    const x = w * r.range(0.2, 0.3);
+    const y = h * 0.3;
+    const tilt = r.range(-11, -4);
+    const ink = p.deep;
+
+    let out = rect(0, h * 0.82, w, h * 0.18, ' fill="' + p.deep + '" opacity="0.7"');
+
+    out += '<g transform="rotate(' + fmt(tilt) + ' ' + fmt(x + bw / 2) + ' ' + fmt(y + bh / 2) + ')">';
+    // Clapper sticks
+    const stickH = bh * 0.17;
+    out += rect(x, y - stickH * 1.5, bw, stickH, ' rx="' + fmt(4 * s) + '" fill="' + ink + '"');
+    let stripes = '';
+    const sw = bw / 11;
+    for (let i = 0; i < 11; i += 2) {
+      stripes += '<polygon points="' + fmt(x + i * sw) + ',' + fmt(y - stickH * 1.5) + ' ' +
+        fmt(x + (i + 1) * sw) + ',' + fmt(y - stickH * 1.5) + ' ' +
+        fmt(x + (i + 1) * sw - sw * 0.35) + ',' + fmt(y - stickH * 0.5) + ' ' +
+        fmt(x + i * sw - sw * 0.35) + ',' + fmt(y - stickH * 0.5) + '"/>';
+    }
+    out += '<g fill="' + p.glow + '" opacity="0.85">' + stripes + '</g>';
+    out += circle(x + bw + 6 * s, y - stickH, 10 * s, ' fill="' + p.mid + '"');
+
+    // Board
+    out += rect(x, y, bw, bh, ' rx="' + fmt(6 * s) + '" fill="' + ink + '"');
+    // Info rows
+    const rows = 4;
+    for (let i = 0; i < rows; i += 1) {
+      const ry = y + bh * (0.12 + i * 0.21);
+      out += '<line x1="' + fmt(x + bw * 0.05) + '" y1="' + fmt(ry) + '" x2="' + fmt(x + bw * 0.95) + '" y2="' + fmt(ry) +
+        '" stroke="' + p.glow + '" stroke-width="' + fmt(2 * s) + '" opacity="0.2"/>';
+      // Chalked entries
+      const cells = i === 0 ? 2 : 3;
+      for (let c = 0; c < cells; c += 1) {
+        out += rect(
+          x + bw * (0.07 + c * (0.86 / cells)),
+          ry + bh * 0.05,
+          bw * (0.86 / cells) * r.range(0.3, 0.68),
+          bh * 0.055,
+          ' fill="' + p.glow + '" opacity="' + fmt(r.range(0.3, 0.7)) + '"',
+        );
+      }
+    }
+    // Vertical divider
+    out += '<line x1="' + fmt(x + bw * 0.62) + '" y1="' + fmt(y + bh * 0.12) + '" x2="' + fmt(x + bw * 0.62) + '" y2="' + fmt(y + bh * 0.95) +
+      '" stroke="' + p.glow + '" stroke-width="' + fmt(2 * s) + '" opacity="0.18"/>';
+    // Rim light
+    out += '<path d="M ' + fmt(x + 8 * s) + ' ' + fmt(y) + ' L ' + fmt(x + bw - 8 * s) + ' ' + fmt(y) +
+      '" fill="none" stroke="' + p.glow + '" stroke-width="' + fmt(3 * s) + '" opacity="0.4"/>';
+    out += '</g>';
+    return out;
+  },
+
+  /** A set of prime lenses standing on a bench, plus one on its side. */
+  lenses(w, h, p, r) {
+    const s = Math.min(w / 1600, h / 900);
+    const bench = h * 0.78;
+    const ink = p.deep;
+    let out = rect(0, bench, w, h - bench, ' fill="' + p.deep + '" opacity="0.85"');
+    out += rect(0, bench - 2 * s, w, 4 * s, ' fill="' + p.glow + '" opacity="0.12"');
+
+    const count = 4;
+    for (let i = 0; i < count; i += 1) {
+      const lw = (60 + i * 8) * s * r.range(0.9, 1.15);
+      const lh = (200 + i * 26) * s * r.range(0.9, 1.1);
+      const x = w * (0.16 + i * 0.16) + r.range(-w * 0.012, w * 0.012);
+      const y = bench - lh;
+
+      out += '<g>';
+      // Barrel
+      out += rect(x - lw / 2, y, lw, lh, ' rx="' + fmt(lw * 0.12) + '" fill="' + ink + '"');
+      // Focus and iris rings
+      for (let k = 0; k < 3; k += 1) {
+        const ry = y + lh * (0.24 + k * 0.2);
+        out += rect(x - lw / 2 - 4 * s, ry, lw + 8 * s, lh * 0.075, ' fill="' + p.mid + '" opacity="0.9"');
+        // Knurling
+        for (let n = 0; n < 7; n += 1) {
+          out += rect(x - lw / 2 + (n + 0.5) * (lw / 7), ry, 2.4 * s, lh * 0.075,
+            ' fill="' + p.deep + '" opacity="0.6"');
+        }
+      }
+      // Front element with coating flare
+      out += ellipse(x, y + lh * 0.06, lw * 0.42, lh * 0.05, ' fill="' + p.low + '"');
+      out += ellipse(x, y + lh * 0.06, lw * 0.3, lh * 0.032,
+        ' fill="' + (i % 2 ? p.accent : p.glow) + '" opacity="0.45"');
+      // Rim light down one edge
+      out += rect(x + lw / 2 - 3 * s, y + lh * 0.1, 3 * s, lh * 0.8,
+        ' fill="' + p.glow + '" opacity="0.3"');
+      out += '</g>';
+    }
+
+    // One lying on its side, foreground
+    const ly = bench + (h - bench) * 0.42;
+    const llw = 260 * s;
+    const llh = 74 * s;
+    const lx = w * 0.62;
+    out += rect(lx, ly - llh / 2, llw, llh, ' rx="' + fmt(llh * 0.3) + '" fill="' + ink + '"');
+    for (let k = 0; k < 2; k += 1) {
+      out += rect(lx + llw * (0.28 + k * 0.26), ly - llh / 2 - 3 * s, llw * 0.1, llh + 6 * s,
+        ' fill="' + p.mid + '" opacity="0.9"');
+    }
+    out += ellipse(lx + llw, ly, llw * 0.045, llh * 0.42, ' fill="' + p.accent + '" opacity="0.4"');
+    out += '<path d="M ' + fmt(lx + llh * 0.3) + ' ' + fmt(ly - llh / 2) + ' L ' + fmt(lx + llw - llh * 0.3) + ' ' + fmt(ly - llh / 2) +
+      '" fill="none" stroke="' + p.glow + '" stroke-width="' + fmt(3 * s) + '" opacity="0.4"/>';
+
     return out;
   },
 };

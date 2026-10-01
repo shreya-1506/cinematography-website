@@ -95,7 +95,19 @@ export default function Contact({ contact, personalInfo, socialLinks }) {
             <ContactForm config={contact.form} />
           </Reveal>
         </div>
+
+        {/* ------------------------------------------------- the last shot */}
+        {contact.closingCard ? (
+          <Reveal className="contact__closing" variants={fadeUp} delay={0.1} amount={0.2}>
+            <span className="contact__closing-rule" aria-hidden="true" />
+            <p className="contact__closing-line">{contact.closingCard.line}</p>
+            <p className="contact__closing-slate mono">{contact.closingCard.slate}</p>
+          </Reveal>
+        ) : null}
       </div>
+
+      {/* Fade to black, literally */}
+      <div className="contact__fade" aria-hidden="true" />
     </section>
   );
 }

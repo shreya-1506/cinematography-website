@@ -50,3 +50,16 @@ export function isTouchDevice() {
   if (typeof window === 'undefined') return false;
   return window.matchMedia('(hover: none), (pointer: coarse)').matches;
 }
+
+/**
+ * Keeps a stored list index valid when the list shrinks.
+ *
+ * Content is editable at runtime (see src/content), so any list on the page can
+ * get shorter — or empty — between renders. Components that hold an index must
+ * clamp it rather than indexing past the end.
+ */
+export function clampIndex(index, length) {
+  if (!length || length < 1) return -1;
+  if (!Number.isFinite(index) || index < 0) return 0;
+  return Math.min(Math.floor(index), length - 1);
+}

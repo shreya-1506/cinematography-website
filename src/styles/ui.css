@@ -632,3 +632,372 @@ input[type='date'].field__control::-webkit-calendar-picker-indicator:hover {
     transform: rotate(360deg);
   }
 }
+
+/* ================================================================== */
+/*  Camera movement glyphs                                            */
+/* ================================================================== */
+
+.movement {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.movement__glyph {
+  width: clamp(40px, 4vw, 54px);
+  height: auto;
+  overflow: visible;
+  color: var(--amber);
+  flex: 0 0 auto;
+}
+
+.movement__glyph .mg-rail,
+.movement__glyph .mg-head {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.5;
+}
+
+.movement__glyph .mg-frame {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.1;
+  opacity: 0.42;
+}
+
+.movement__glyph .mg-body {
+  fill: currentColor;
+  opacity: 0.9;
+}
+
+.movement__glyph .mg-subject {
+  fill: currentColor;
+  opacity: 0.55;
+}
+
+.movement__label {
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+/* --- the motion itself (stilled by the global reduced-motion rule) --- */
+
+.mg-slide {
+  animation: mg-slide 3.4s var(--ease-in-out) infinite;
+}
+
+@keyframes mg-slide {
+  0%,
+  8% {
+    transform: translateX(0);
+  }
+  50%,
+  58% {
+    transform: translateX(36px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.mg-grow {
+  transform-origin: 32px 16px;
+  animation: mg-grow 3.4s var(--ease-in-out) infinite;
+}
+
+@keyframes mg-grow {
+  0%,
+  10% {
+    transform: scale(0.72);
+    opacity: 0.3;
+  }
+  55%,
+  70% {
+    transform: scale(1.06);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0.72);
+    opacity: 0.3;
+  }
+}
+
+.mg-shrink {
+  transform-origin: 32px 16px;
+  animation: mg-grow 3.4s var(--ease-in-out) infinite reverse;
+}
+
+.mg-arc {
+  offset-path: path('M6 28 Q 32 28 52 8');
+  offset-rotate: 0deg;
+  animation: mg-arc 3.6s var(--ease-in-out) infinite;
+  fill: currentColor;
+}
+
+@keyframes mg-arc {
+  0%,
+  8% {
+    offset-distance: 0%;
+  }
+  55%,
+  68% {
+    offset-distance: 100%;
+  }
+  100% {
+    offset-distance: 0%;
+  }
+}
+
+/* Fallback for engines without offset-path: fade the marker in place */
+@supports not (offset-path: path('M0 0 L1 1')) {
+  .mg-arc {
+    transform: translate(46px, 10px);
+    animation: mg-pulse 2.4s ease-in-out infinite;
+  }
+}
+
+.mg-orbit {
+  offset-path: path('M56 17 A 24 9 0 1 1 8 17 A 24 9 0 1 1 56 17');
+  animation: mg-arc 5s linear infinite;
+  fill: currentColor;
+}
+
+@supports not (offset-path: path('M0 0 L1 1')) {
+  .mg-orbit {
+    transform: translate(56px, 17px);
+    animation: mg-pulse 2.4s ease-in-out infinite;
+  }
+}
+
+.mg-jitter {
+  animation: mg-jitter 0.7s steps(3, end) infinite;
+}
+
+@keyframes mg-jitter {
+  0% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(0.6px, -0.8px);
+  }
+  66% {
+    transform: translate(-0.7px, 0.5px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.mg-pulse {
+  animation: mg-pulse 2.6s var(--ease-in-out) infinite;
+}
+
+@keyframes mg-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* ================================================================== */
+/*  Colour palette                                                    */
+/* ================================================================== */
+
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.palette__row {
+  display: flex;
+  gap: 3px;
+}
+
+.palette__item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.palette__swatch {
+  display: block;
+  width: 100%;
+  height: clamp(30px, 3.4vw, 44px);
+  padding: 0;
+  border: 1px solid transparent;
+  transition: transform 0.45s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+
+.palette__fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--swatch);
+}
+
+.palette__swatch:hover,
+.palette__swatch:focus-visible,
+.palette__swatch.is-active {
+  transform: translateY(-3px);
+  border-color: var(--amber-line);
+}
+
+.palette--compact .palette__swatch {
+  height: clamp(18px, 2vw, 26px);
+}
+
+.palette__readout {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  min-height: 1.2em;
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  color: var(--fg-faint);
+}
+
+.palette__readout-name {
+  color: var(--fg);
+}
+
+.palette__readout-hex {
+  color: var(--amber);
+}
+
+.palette__readout-hint {
+  text-transform: none;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
+
+/* ================================================================== */
+/*  Cinematography DNA sheet                                          */
+/* ================================================================== */
+
+.dna {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.4vw, 1.9rem);
+  padding: clamp(1.25rem, 2.6vw, 2rem);
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(217, 163, 74, 0.035), transparent 45%),
+    var(--ink-800);
+}
+
+.dna__head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dna__title {
+  font-size: 0.56rem;
+  letter-spacing: 0.28em;
+  color: var(--amber);
+  white-space: nowrap;
+}
+
+.dna__rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, var(--amber-line), transparent);
+}
+
+.dna__specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+  gap: clamp(0.9rem, 2vw, 1.5rem);
+  margin: 0;
+}
+
+.dna__spec,
+.dna__prose-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dna__spec-label {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+.dna__spec-value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.98rem, 1.3vw, 1.18rem);
+  line-height: 1.25;
+  color: var(--fg);
+}
+
+.dna__prose {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 1.8vw, 1.25rem);
+  margin: 0;
+  padding-top: clamp(1rem, 2vw, 1.5rem);
+  border-top: 1px solid var(--line);
+}
+
+.dna__prose-value {
+  margin: 0;
+  font-size: var(--text-small);
+  line-height: 1.62;
+  color: var(--fg-soft);
+  max-width: 62ch;
+}
+
+.dna__movements,
+.dna__palette {
+  padding-top: clamp(1rem, 2vw, 1.5rem);
+  border-top: 1px solid var(--line);
+}
+
+.dna__movements {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.dna__movement-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.9rem, 2.2vw, 1.9rem);
+}
+
+/* ================================================================== */
+/*  Equipment icons                                                   */
+/* ================================================================== */
+
+.gear-icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex: 0 0 auto;
+  color: var(--amber);
+  opacity: 0.85;
+  vertical-align: -0.16em;
+}
+
+/* Icons inside small-caps labels sit beside the text */
+.dna__spec-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.dna__icon {
+  width: 0.95rem;
+  height: 0.95rem;
+}

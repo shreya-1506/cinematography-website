@@ -1,0 +1,233 @@
+/* ==========================================================================
+   Light & Shadow
+   ========================================================================== */
+
+.lightsec {
+  position: relative;
+  padding-block: var(--section-y);
+  background: var(--ink-900);
+  overflow: hidden;
+  isolation: isolate;
+  /* --mood-accent is set inline from the active mood */
+  transition: background-color 1.2s var(--ease-out);
+}
+
+/* The wash re-tints the whole section as the mood changes */
+.lightsec__wash {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 55% at 78% 12%, color-mix(in srgb, var(--mood-accent) 16%, transparent), transparent 62%),
+    radial-gradient(80% 60% at 12% 90%, color-mix(in srgb, var(--mood-accent) 9%, transparent), transparent 68%);
+  transition: background 1.4s var(--ease-out);
+}
+
+/* Fallback for engines without color-mix */
+@supports not (background: color-mix(in srgb, red 10%, transparent)) {
+  .lightsec__wash {
+    background: radial-gradient(70% 55% at 78% 12%, var(--amber-glow), transparent 62%);
+  }
+}
+
+.lightsec__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+/* ----------------------------------------------------------------- list --- */
+
+.lightsec__list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.mood {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.4rem 1fr auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: clamp(0.85rem, 1.7vw, 1.15rem) 0;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  color: var(--fg-dim);
+  transition: color 0.45s var(--ease-out), padding-left 0.5s var(--ease-out);
+}
+
+.mood:hover,
+.mood:focus-visible {
+  color: var(--fg);
+}
+
+.mood.is-active {
+  color: var(--fg);
+  padding-left: 0.75rem;
+}
+
+.mood__index {
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  color: var(--fg-ghost);
+  transition: color 0.45s var(--ease-out);
+}
+
+.mood.is-active .mood__index {
+  color: var(--mood-swatch, var(--amber));
+}
+
+.mood__label {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.9vw, 1.6rem);
+  font-weight: 300;
+  line-height: 1.15;
+}
+
+.mood__kelvin {
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: var(--fg-faint);
+}
+
+/* The swatch bar that grows under the active mood */
+.mood__bar {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 1px;
+  width: 100%;
+  background: var(--mood-swatch, var(--amber));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s var(--ease-out);
+}
+
+.mood.is-active .mood__bar {
+  transform: scaleX(1);
+}
+
+/* ---------------------------------------------------------------- panel --- */
+
+.lightsec__panel {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.lightsec__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--ink-800);
+  isolation: isolate;
+}
+
+.lightsec__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lightsec__grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 100% at 50% 45%, transparent 42%, rgba(3, 3, 3, 0.62) 100%),
+    linear-gradient(180deg, rgba(3, 3, 3, 0.24), transparent 45%, rgba(3, 3, 3, 0.44));
+}
+
+/* Halation-inspired bloom in the mood's own colour */
+.lightsec__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: inset 0 0 clamp(40px, 7vw, 110px) color-mix(in srgb, var(--mood-accent) 22%, transparent);
+  transition: box-shadow 1.2s var(--ease-out);
+}
+
+.lightsec__bars {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.lightsec__bars span {
+  height: clamp(9px, 2.4%, 22px);
+  background: var(--black);
+}
+
+.lightsec__slate {
+  position: absolute;
+  left: clamp(0.75rem, 1.5vw, 1.25rem);
+  bottom: clamp(1.25rem, 3vw, 2.1rem);
+  z-index: 4;
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: var(--fg-soft);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+.lightsec__meta {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.lightsec__note {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--fg);
+  max-width: 52ch;
+}
+
+.lightsec__specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin: 0;
+  padding-top: clamp(1rem, 2vw, 1.4rem);
+  border-top: 1px solid var(--line);
+}
+
+.lightsec__specs > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.lightsec__specs dd {
+  margin: 0;
+  font-size: var(--text-small);
+  color: var(--fg);
+}
+
+/* ---------------------------------------------------------- breakpoints --- */
+
+@media (min-width: 1024px) {
+  .lightsec__body {
+    grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr);
+  }
+
+  .lightsec__list {
+    position: sticky;
+    top: calc(var(--header-h) + 3rem);
+  }
+}

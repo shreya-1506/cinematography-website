@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import SectionHeading from '@/components/ui/SectionHeading';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import { EASE_OUT } from '@/lib/motion';
-import { cx, pad } from '@/lib/utils';
+import { clampIndex, cx, pad } from '@/lib/utils';
 import '@/styles/testimonials.css';
 
 /**
@@ -16,11 +16,13 @@ export default function Testimonials({ testimonials, section }) {
   const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
   const timer = useRef(null);
-  const count = testimonials.length;
+  const list = testimonials || [];
+  const count = list.length;
 
   const go = useCallback(
     (delta) => {
       setDirection(delta > 0 ? 1 : -1);
+      if (!count) return;
       setIndex((prev) => (prev + delta + count) % count);
     },
     [count],
@@ -52,7 +54,12 @@ export default function Testimonials({ testimonials, section }) {
     }
   };
 
-  const active = testimonials[index];
+  // The list is editable at runtime, so clamp before indexing.
+  const safeIndex = clampIndex(index, count);
+  const active = safeIndex === -1 ? null : list[safeIndex];
+
+  // Nothing to show if every testimonial was removed in the editor.
+  if (!active) return null;
 
   const variants = reduced
     ? {
@@ -113,7 +120,7 @@ export default function Testimonials({ testimonials, section }) {
 
                 <figcaption className="testimonials__person">
                   <span className="testimonials__avatar">
-                    <img src={active.image} alt="" loading="lazy" decoding="async" />
+                    {active.image ? <img src={active.image} alt="" loading="lazy" decoding="async" /> : null}
                   </span>
                   <span className="testimonials__person-body">
                     <span className="testimonials__name">{active.name}</span>
@@ -132,14 +139,14 @@ export default function Testimonials({ testimonials, section }) {
 
           <div className="testimonials__controls">
             <div className="testimonials__dots" role="tablist" aria-label="Choose a testimonial">
-              {testimonials.map((item, i) => (
+              {list.map((item, i) => (
                 <button
                   type="button"
                   key={item.id}
                   role="tab"
-                  aria-selected={i === index}
+                  aria-selected={i === safeIndex}
                   aria-label={'Testimonial ' + (i + 1) + ' — ' + item.name}
-                  className={cx('testimonials__dot', i === index && 'is-active')}
+                  className={cx('testimonials__dot', i === safeIndex && 'is-active')}
                   onClick={() => {
                     setPaused(true);
                     jump(i);

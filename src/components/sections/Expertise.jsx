@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import SectionHeading from '@/components/ui/SectionHeading';
 import Frame from '@/components/ui/Frame';
+import GearIcon from '@/components/ui/GearIcon';
 import { fadeUp, stagger } from '@/lib/motion';
 import { cx } from '@/lib/utils';
 import '@/styles/expertise.css';
@@ -104,6 +105,9 @@ export default function Expertise({ expertise, skills }) {
                   <div className="skill-card__top">
                     <span className="skill-card__index mono">{skill.index}</span>
                     <h3 className="skill-card__title">{skill.title}</h3>
+                    {skill.icon ? (
+                      <GearIcon name={skill.icon} className="skill-card__icon" />
+                    ) : null}
                   </div>
 
                   <p className="skill-card__summary">{skill.summary}</p>

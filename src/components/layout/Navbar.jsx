@@ -10,15 +10,39 @@ import '@/styles/navbar.css';
 
 const HEADER_OFFSET = -1;
 
-export default function Navbar({ personalInfo, navigation, socialLinks, contactLabel = 'Enquire' }) {
+export default function Navbar({
+  personalInfo,
+  navigation,
+  socialLinks,
+  scrollSections,
+  contactLabel = 'Enquire',
+}) {
   const reduced = useReducedMotion();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const { scrollY } = useScroll();
 
-  const ids = useMemo(() => navigation.map((item) => item.id), [navigation]);
-  const active = useActiveSection(ids);
+  const ids = useMemo(
+    () => (scrollSections && scrollSections.length ? scrollSections : navigation.map((item) => item.id)),
+    [scrollSections, navigation],
+  );
+  const activeSection = useActiveSection(ids);
+
+  /**
+   * Sections between nav anchors (Light & Shadow, Behind the Frame, ...) should
+   * keep their nearest preceding nav item lit rather than clearing the nav.
+   */
+  const active = useMemo(() => {
+    if (navigation.some((item) => item.id === activeSection)) return activeSection;
+    const order = ids.indexOf(activeSection);
+    if (order === -1) return activeSection;
+    for (let i = order; i >= 0; i -= 1) {
+      const candidate = navigation.find((item) => item.id === ids[i]);
+      if (candidate) return candidate.id;
+    }
+    return activeSection;
+  }, [activeSection, ids, navigation]);
 
   useScrollLock(menuOpen);
 
@@ -105,7 +129,7 @@ export default function Navbar({ personalInfo, navigation, socialLinks, contactL
           <nav className="navbar__nav" aria-label="Primary">
             <ul className="navbar__list">
               {navigation
-                .filter((item) => item.id !== 'hero' && item.id !== 'contact')
+                .filter((item) => item.id !== 'contact')
                 .map((item) => (
                   <li key={item.id}>
                     <a

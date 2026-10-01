@@ -1,0 +1,524 @@
+/* ==========================================================================
+   Behind the Frame — breakdown + lighting diagram
+   ========================================================================== */
+
+.breakdown {
+  position: relative;
+  padding-block: var(--section-y);
+  background: linear-gradient(180deg, var(--ink-900), var(--black) 70%);
+}
+
+/* ----------------------------------------------------------------- tabs --- */
+
+.breakdown__tabs {
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+  padding-block: clamp(0.75rem, 1.5vw, 1.1rem);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.breakdown__tab-row {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+}
+
+.breakdown__tab {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.7rem 1rem;
+  text-align: left;
+  border: 1px solid transparent;
+  color: var(--fg-dim);
+  transition: color 0.4s var(--ease-out), border-color 0.4s var(--ease-out),
+    background-color 0.4s var(--ease-out);
+}
+
+.breakdown__tab:hover,
+.breakdown__tab:focus-visible {
+  color: var(--fg);
+}
+
+.breakdown__tab.is-active {
+  color: var(--fg);
+  border-color: var(--amber-line);
+  background: var(--amber-glow);
+}
+
+.breakdown__tab-index {
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  color: var(--amber);
+  padding-top: 0.2rem;
+}
+
+.breakdown__tab-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.breakdown__tab-title {
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+.breakdown__tab-project {
+  font-size: 0.48rem;
+  letter-spacing: 0.16em;
+  color: var(--fg-faint);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- stage --- */
+
+.breakdown__stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.breakdown__viewer {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 1.5vw, 1.15rem);
+}
+
+.breakdown__viewport {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--ink-800);
+  isolation: isolate;
+}
+
+.breakdown__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.breakdown__layer--plan {
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 2vw, 1.75rem);
+  background:
+    radial-gradient(90% 90% at 50% 40%, var(--ink-700), var(--ink-900) 70%);
+}
+
+.breakdown__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.breakdown__grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 100% at 50% 45%, transparent 45%, rgba(3, 3, 3, 0.6) 100%),
+    linear-gradient(180deg, rgba(3, 3, 3, 0.22), transparent 50%, rgba(3, 3, 3, 0.4));
+}
+
+.breakdown__slate {
+  position: absolute;
+  left: clamp(0.7rem, 1.4vw, 1.1rem);
+  bottom: clamp(0.7rem, 1.4vw, 1.1rem);
+  z-index: 4;
+  font-size: 0.48rem;
+  letter-spacing: 0.2em;
+  color: var(--fg-dim);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+}
+
+.breakdown__toggle {
+  display: inline-flex;
+  align-self: flex-start;
+  border: 1px solid var(--line-strong);
+}
+
+.breakdown__toggle-btn {
+  padding: 0.7rem 1.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  transition: color 0.35s var(--ease-out), background-color 0.35s var(--ease-out);
+}
+
+.breakdown__toggle-btn + .breakdown__toggle-btn {
+  border-left: 1px solid var(--line-strong);
+}
+
+.breakdown__toggle-btn:hover {
+  color: var(--fg);
+}
+
+.breakdown__toggle-btn.is-active {
+  color: var(--black);
+  background: var(--amber);
+}
+
+/* ---------------------------------------------------------------- notes --- */
+
+.breakdown__notes {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 1.8vw, 1.35rem);
+}
+
+.breakdown__eyebrow {
+  font-size: 0.5rem;
+  letter-spacing: 0.24em;
+  color: var(--amber);
+}
+
+.breakdown__title {
+  color: var(--fg);
+}
+
+.breakdown__specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr));
+  gap: 0.9rem;
+  margin: 0;
+  padding-block: clamp(0.9rem, 1.8vw, 1.25rem);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.breakdown__specs > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.breakdown__specs dt {
+  text-transform: capitalize;
+}
+
+.breakdown__specs dd {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--fg);
+}
+
+.breakdown__note {
+  padding-left: clamp(0.9rem, 2vw, 1.35rem);
+  border-left: 1px solid var(--amber-line);
+}
+
+.breakdown__note p {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--fg-soft);
+}
+
+.breakdown__note footer {
+  margin-top: 0.6rem;
+  font-size: 0.48rem;
+  letter-spacing: 0.22em;
+  color: var(--fg-ghost);
+}
+
+.breakdown__sources {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.breakdown__source {
+  display: grid;
+  grid-template-columns: 10px 3.2rem 1fr;
+  align-items: baseline;
+  gap: 0.7rem;
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+}
+
+.breakdown__source-mark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--amber);
+  transform: translateY(2px);
+}
+
+.breakdown__source.is-key .breakdown__source-mark {
+  background: var(--amber);
+}
+
+.breakdown__source.is-back .breakdown__source-mark {
+  border-color: #9fc4d8;
+}
+
+.breakdown__source.is-practical .breakdown__source-mark {
+  background: var(--amber-bright);
+  border-color: var(--amber-bright);
+}
+
+.breakdown__source.is-negative .breakdown__source-mark {
+  border-radius: 1px;
+  background: var(--ink-400);
+  border-color: var(--line-strong);
+}
+
+.breakdown__source-label {
+  font-size: 0.48rem;
+  letter-spacing: 0.16em;
+  color: var(--fg);
+}
+
+/* ================================================================== */
+/*  Lighting diagram                                                  */
+/* ================================================================== */
+
+.diagram {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.4vw, 1rem);
+  width: 100%;
+  max-width: 640px;
+}
+
+.diagram__svg {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  max-height: min(52vh, 420px);
+  color: var(--fg);
+  overflow: visible;
+}
+
+.diagram__grid {
+  color: var(--fg);
+}
+
+.diagram__ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.25;
+  opacity: 0.14;
+  stroke-dasharray: 1.4 1.8;
+}
+
+.diagram__cone {
+  fill: var(--amber);
+  opacity: 0.07;
+  stroke: var(--amber);
+  stroke-width: 0.2;
+}
+
+.diagram__throw {
+  stroke: currentColor;
+  stroke-width: 0.35;
+  stroke-dasharray: 1.6 1.6;
+  opacity: 0.3;
+  transition: opacity 0.35s var(--ease-out), stroke-width 0.35s var(--ease-out);
+}
+
+.diagram__throw.is-key {
+  stroke: var(--amber);
+  opacity: 0.55;
+}
+
+.diagram__throw.is-negative {
+  opacity: 0.16;
+}
+
+.diagram__throw.is-active {
+  opacity: 0.95;
+  stroke-width: 0.5;
+}
+
+.diagram__throw.is-dim {
+  opacity: 0.1;
+}
+
+.diagram__subject circle {
+  fill: var(--fg);
+}
+
+.diagram__subject-halo {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 0.3;
+  opacity: 0.35;
+}
+
+.diagram__camera rect {
+  fill: var(--fg);
+  opacity: 0.9;
+}
+
+.diagram__tick {
+  fill: currentColor;
+  font-family: var(--font-mono);
+  font-size: 3px;
+  letter-spacing: 0.2px;
+  text-anchor: middle;
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+.diagram__light {
+  transition: opacity 0.35s var(--ease-out);
+  cursor: pointer;
+}
+
+.diagram__light.is-dim {
+  opacity: 0.4;
+}
+
+.diagram__bulb {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 0.5;
+}
+
+.diagram__bulb.is-filled {
+  fill: var(--amber);
+}
+
+.diagram__light.is-back .diagram__bulb {
+  stroke: #9fc4d8;
+}
+
+.diagram__light.is-practical .diagram__bulb {
+  fill: var(--amber-bright);
+  stroke: var(--amber-bright);
+}
+
+.diagram__neg {
+  fill: var(--ink-400);
+  stroke: var(--line-strong);
+  stroke-width: 0.3;
+}
+
+.diagram__rays circle {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 0.25;
+  stroke-dasharray: 0.8 1.4;
+  opacity: 0.4;
+}
+
+.diagram__light.is-active .diagram__rays circle {
+  opacity: 0.9;
+}
+
+.diagram__hit {
+  cursor: pointer;
+}
+
+.diagram__hit:focus-visible {
+  outline: none;
+  stroke: var(--amber);
+  stroke-width: 0.5;
+}
+
+.diagram__readout {
+  min-height: 2.4em;
+}
+
+.diagram__readout-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  font-size: 0.78rem;
+  color: var(--fg-soft);
+}
+
+.diagram__readout-label {
+  flex: 0 0 auto;
+  font-size: 0.48rem;
+  letter-spacing: 0.18em;
+  color: var(--amber);
+}
+
+.diagram__readout-line--hint {
+  color: var(--fg-faint);
+}
+
+.diagram__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.1rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+}
+
+.diagram__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.46rem;
+  letter-spacing: 0.16em;
+  color: var(--fg-faint);
+}
+
+.diagram__legend-mark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--amber);
+}
+
+.diagram__legend-item.is-key .diagram__legend-mark {
+  background: var(--amber);
+}
+
+.diagram__legend-item.is-back .diagram__legend-mark {
+  border-color: #9fc4d8;
+}
+
+.diagram__legend-item.is-practical .diagram__legend-mark {
+  background: var(--amber-bright);
+  border-color: var(--amber-bright);
+}
+
+.diagram__legend-item.is-negative .diagram__legend-mark {
+  border-radius: 1px;
+  background: var(--ink-400);
+  border-color: var(--line-strong);
+}
+
+/* ---------------------------------------------------------- breakpoints --- */
+
+@media (min-width: 1024px) {
+  .breakdown__stage {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  }
+}
+
+/* Companion equipment frame for the shot */
+.breakdown__gear {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.6vw, 1.1rem);
+  margin: 0;
+  padding: 0.6rem;
+  border: 1px solid var(--line);
+  background: var(--ink-800);
+}
+
+.breakdown__gear-img {
+  width: clamp(88px, 11vw, 132px);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  flex: 0 0 auto;
+}
+
+.breakdown__gear-caption {
+  font-size: 0.46rem;
+  letter-spacing: 0.18em;
+  color: var(--fg-faint);
+}

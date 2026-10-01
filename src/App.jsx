@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import siteData from '@/data/siteData';
+import { useContent } from '@/content/ContentContext';
 
 import SmoothScroll from '@/components/layout/SmoothScroll';
 import Preloader from '@/components/layout/Preloader';
@@ -16,36 +16,48 @@ import Hero from '@/components/sections/Hero';
 import About from '@/components/sections/About';
 import Portfolio from '@/components/sections/Portfolio';
 import Showreel from '@/components/sections/Showreel';
+import LightAndShadow from '@/components/sections/LightAndShadow';
+import FrameBreakdown from '@/components/sections/FrameBreakdown';
+import Sequences from '@/components/sections/Sequences';
 import Expertise from '@/components/sections/Expertise';
-import BehindTheScenes from '@/components/sections/BehindTheScenes';
+import VisualDiary from '@/components/sections/VisualDiary';
 import Testimonials from '@/components/sections/Testimonials';
 import Clients from '@/components/sections/Clients';
 import Contact from '@/components/sections/Contact';
 
 import '@/styles/layout.css';
 
-const {
-  siteConfig,
-  personalInfo,
-  navigation,
-  socialLinks,
-  hero,
-  about,
-  categories,
-  portfolio,
-  portfolioProjects,
-  showreel,
-  expertise,
-  skills,
-  behindTheScenes,
-  testimonials,
-  testimonialsSection,
-  clients,
-  contact,
-  footer,
-} = siteData;
+
 
 export default function App() {
+  // All copy, imagery and switches come from the content layer:
+  // src/data/siteData.js defaults, overridden by public/content.json.
+  const {
+    siteConfig,
+    personalInfo,
+    navigation,
+    scrollSections,
+    socialLinks,
+    hero,
+    about,
+    categories,
+    portfolio,
+    portfolioProjects,
+    showreel,
+    lighting,
+    frameBreakdown,
+    sequences,
+    expertise,
+    skills,
+    visualDiary,
+    cameraMovements,
+    testimonials,
+    testimonialsSection,
+    clients,
+    contact,
+    footer,
+  } = useContent();
+
   const [loading, setLoading] = useState(siteConfig.loader.enabled);
   // `ready` flips as the title card starts lifting, so the hero's entrance
   // plays with the curtain instead of finishing behind it.
@@ -75,6 +87,7 @@ export default function App() {
           <>
             <div className="grain" aria-hidden="true" />
             <div className="scanlines" aria-hidden="true" />
+            <div className="dust" aria-hidden="true" />
           </>
         ) : null}
 
@@ -96,6 +109,7 @@ export default function App() {
           personalInfo={personalInfo}
           navigation={navigation}
           socialLinks={socialLinks}
+          scrollSections={scrollSections}
         />
 
         <main className="app__main" id="main">
@@ -109,20 +123,37 @@ export default function App() {
 
           <hr className="divider" />
 
-          <ErrorBoundary name="Portfolio">
-            <Portfolio portfolio={portfolio} projects={portfolioProjects} categories={categories} />
+          <ErrorBoundary name="Work">
+            <Portfolio
+              portfolio={portfolio}
+              projects={portfolioProjects}
+              categories={categories}
+              movementLibrary={cameraMovements}
+            />
           </ErrorBoundary>
 
           <ErrorBoundary name="Showreel">
             <Showreel showreel={showreel} />
           </ErrorBoundary>
 
+          <ErrorBoundary name="Light & Shadow">
+            <LightAndShadow lighting={lighting} />
+          </ErrorBoundary>
+
+          <ErrorBoundary name="Behind the Frame">
+            <FrameBreakdown frameBreakdown={frameBreakdown} />
+          </ErrorBoundary>
+
+          <ErrorBoundary name="Board to Frame">
+            <Sequences sequences={sequences} />
+          </ErrorBoundary>
+
           <ErrorBoundary name="Expertise">
             <Expertise expertise={expertise} skills={skills} />
           </ErrorBoundary>
 
-          <ErrorBoundary name="Behind the scenes">
-            <BehindTheScenes behindTheScenes={behindTheScenes} />
+          <ErrorBoundary name="Visual Diary">
+            <VisualDiary visualDiary={visualDiary} />
           </ErrorBoundary>
 
           <ErrorBoundary name="Testimonials">

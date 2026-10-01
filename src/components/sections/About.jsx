@@ -2,9 +2,11 @@ import { motion } from 'framer-motion';
 import SectionHeading from '@/components/ui/SectionHeading';
 import Reveal from '@/components/ui/Reveal';
 import Frame from '@/components/ui/Frame';
+import GearIcon from '@/components/ui/GearIcon';
 import useCountUp from '@/hooks/useCountUp';
 import { scrollTo } from '@/lib/scroll';
 import { fadeUp, fadeSlideRight, stagger } from '@/lib/motion';
+import { pad } from '@/lib/utils';
 import '@/styles/about.css';
 
 function Stat({ value, label, suffix }) {
@@ -73,6 +75,25 @@ export default function About({ about, personalInfo, socialLinks }) {
                 </motion.p>
               ))}
             </motion.div>
+
+            {/* ------------------------------------------------ philosophy */}
+            {about.philosophy && about.philosophy.length ? (
+              <motion.ol
+                className="about__philosophy"
+                variants={stagger(0.1)}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.2 }}
+                aria-label="Working principles"
+              >
+                {about.philosophy.map((line, index) => (
+                  <motion.li className="about__principle" key={line} variants={fadeUp}>
+                    <span className="about__principle-index mono">{pad(index + 1)}</span>
+                    <span className="about__principle-text">{line}</span>
+                  </motion.li>
+                ))}
+              </motion.ol>
+            ) : null}
 
             <Reveal className="about__quote" variants={fadeSlideRight} delay={0.1}>
               <blockquote>
@@ -148,15 +169,40 @@ export default function About({ about, personalInfo, socialLinks }) {
           ))}
         </motion.div>
 
-        {/* ------------------------------------------- awards + expertise */}
+        {/* --------------------------------------- credits, awards and kit */}
         <div className="about__lower">
-          <div className="about__panel">
+          {/* Credits lead — the work, not the paperwork */}
+          <div className="about__panel about__panel--credits">
             <Reveal variants={fadeUp}>
-              <h3 className="about__panel-title h3">Awards &amp; selections</h3>
+              <h3 className="about__panel-title h3">{about.creditsLabel}</h3>
+            </Reveal>
+            <motion.ul
+              className="about__credits"
+              variants={stagger(0.06)}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.1 }}
+            >
+              {about.selectedCredits.map((credit) => (
+                <motion.li className="about__credit" key={credit.title} variants={fadeUp}>
+                  <span className="about__credit-title">{credit.title}</span>
+                  <span className="about__credit-role">{credit.role}</span>
+                  <span className="about__credit-meta mono">
+                    {credit.company} · {credit.year}
+                  </span>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </div>
+
+          {/* Awards and kit, deliberately quieter */}
+          <div className="about__panel about__panel--aside">
+            <Reveal variants={fadeUp}>
+              <h4 className="about__aside-title mono">{about.recognitionLabel}</h4>
             </Reveal>
             <motion.ul
               className="about__awards"
-              variants={stagger(0.06)}
+              variants={stagger(0.05)}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.1 }}
@@ -168,51 +214,41 @@ export default function About({ about, personalInfo, socialLinks }) {
                     <span className="about__award-title">{award.title}</span>
                     <span className="about__award-event">{award.event}</span>
                   </span>
-                  <span className="about__award-project mono">{award.project}</span>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </div>
-
-          <div className="about__panel">
-            <Reveal variants={fadeUp}>
-              <h3 className="about__panel-title h3">Specializations</h3>
-            </Reveal>
-            <motion.ul
-              className="about__tags"
-              variants={stagger(0.04)}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.1 }}
-            >
-              {about.specializations.map((item) => (
-                <motion.li className="about__tag" key={item} variants={fadeUp}>
-                  {item}
                 </motion.li>
               ))}
             </motion.ul>
 
             <Reveal variants={fadeUp}>
-              <h3 className="about__panel-title about__panel-title--spaced h3">Kit &amp; workflow</h3>
+              <h4 className="about__aside-title about__aside-title--spaced mono">{about.kitLabel}</h4>
             </Reveal>
             <motion.div
               className="about__equipment"
-              variants={stagger(0.07)}
+              variants={stagger(0.06)}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.1 }}
             >
               {about.equipment.map((group) => (
                 <motion.div className="about__equip-group" key={group.group} variants={fadeUp}>
-                  <p className="about__equip-title meta-label">{group.group}</p>
-                  <ul className="about__equip-list">
-                    {group.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
+                  <p className="about__equip-title meta-label">
+                    {group.icon ? <GearIcon name={group.icon} className="about__equip-icon" /> : null}
+                    {group.group}
+                  </p>
+                  <p className="about__equip-line">{group.items.join(' · ')}</p>
                 </motion.div>
               ))}
             </motion.div>
+
+            <Reveal variants={fadeUp} className="about__tags-wrap">
+              <h4 className="about__aside-title about__aside-title--spaced mono">Specializations</h4>
+              <ul className="about__tags">
+                {about.specializations.map((item) => (
+                  <li className="about__tag" key={item}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
           </div>
         </div>
       </div>

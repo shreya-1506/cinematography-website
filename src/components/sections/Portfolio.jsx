@@ -2,14 +2,14 @@ import { useCallback, useMemo, useState } from 'react';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import SectionHeading from '@/components/ui/SectionHeading';
 import Reveal from '@/components/ui/Reveal';
-import ProjectCard from './ProjectCard';
+import ProjectChapter from './ProjectChapter';
 import ProjectModal from './ProjectModal';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import { fadeUp } from '@/lib/motion';
 import { cx, pad } from '@/lib/utils';
 import '@/styles/portfolio.css';
 
-export default function Portfolio({ portfolio, projects, categories }) {
+export default function Portfolio({ portfolio, projects, categories, movementLibrary }) {
   const reduced = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeProject, setActiveProject] = useState(null);
@@ -37,8 +37,7 @@ export default function Portfolio({ portfolio, projects, categories }) {
         const list = visible.length ? visible : projects;
         const index = list.findIndex((p) => p.id === current.id);
         if (index === -1) return current;
-        const next = (index + delta + list.length) % list.length;
-        return list[next];
+        return list[(index + delta + list.length) % list.length];
       });
     },
     [visible, projects],
@@ -65,7 +64,7 @@ export default function Portfolio({ portfolio, projects, categories }) {
           <Reveal className="portfolio__count" variants={fadeUp} delay={0.2}>
             <span className="portfolio__count-value">{pad(visible.length)}</span>
             <span className="portfolio__count-label meta-label">
-              {activeCategory === 'all' ? 'projects' : 'in view'}
+              {activeCategory === 'all' ? 'chapters' : 'in view'}
             </span>
           </Reveal>
         </div>
@@ -81,17 +80,16 @@ export default function Portfolio({ portfolio, projects, categories }) {
               {categories.map((category) => {
                 const count = counts[category.id] || 0;
                 const isActive = activeCategory === category.id;
-                const disabled = count === 0 && category.id !== 'all';
                 return (
                   <button
                     type="button"
                     key={category.id}
                     role="tab"
                     aria-selected={isActive}
-                    aria-controls="portfolio-grid"
+                    aria-controls="portfolio-chapters"
                     className={cx('portfolio__filter', isActive && 'is-active')}
                     onClick={() => setActiveCategory(category.id)}
-                    disabled={disabled}
+                    disabled={count === 0 && category.id !== 'all'}
                   >
                     {isActive && !reduced ? (
                       <motion.span
@@ -110,17 +108,18 @@ export default function Portfolio({ portfolio, projects, categories }) {
           </div>
         </Reveal>
 
-        {/* ------------------------------------------------------------ grid */}
-        <div className="portfolio__grid" id="portfolio-grid" role="tabpanel" aria-live="polite">
+        {/* -------------------------------------------------------- chapters */}
+        <div className="portfolio__chapters" id="portfolio-chapters" role="tabpanel" aria-live="polite">
           <AnimatePresence mode="popLayout" initial={false}>
             {visible.map((project, index) => (
-              <ProjectCard
+              <ProjectChapter
                 key={project.id}
                 project={project}
                 index={index}
                 categories={categories}
+                copy={portfolio}
+                movementLibrary={movementLibrary}
                 onOpen={openProject}
-                featured={project.featured && activeCategory === 'all'}
               />
             ))}
           </AnimatePresence>
@@ -134,6 +133,8 @@ export default function Portfolio({ portfolio, projects, categories }) {
       <ProjectModal
         project={activeProject}
         categories={categories}
+        movementLibrary={movementLibrary}
+        copy={portfolio}
         open={Boolean(activeProject)}
         onClose={closeProject}
         onNavigate={navigateProject}

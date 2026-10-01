@@ -169,7 +169,7 @@ export default function Lightbox({ images = [], index = 0, open, onClose, onInde
                 aria-selected={i === safeIndex}
                 aria-label={'View image ' + (i + 1)}
               >
-                <img src={image.src} alt="" loading="lazy" decoding="async" />
+                {image.src ? <img src={image.src} alt="" loading="lazy" decoding="async" /> : null}
               </button>
             ))}
           </div>

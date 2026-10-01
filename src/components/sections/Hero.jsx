@@ -42,6 +42,7 @@ export default function Hero({ hero, personalInfo, socialLinks, ready = true }) 
       {/* ------------------------------------------------------------ media */}
       <motion.div className="hero__media" style={{ y: mediaY, scale: mediaScale }}>
         <div className={cx('hero__plate', !reduced && 'hero__plate--drift')}>
+          {hero.background.image ? (
           <img
             className="hero__img"
             src={hero.background.image}
@@ -51,6 +52,7 @@ export default function Hero({ hero, personalInfo, socialLinks, ready = true }) 
             fetchPriority="high"
             draggable="false"
           />
+          ) : null}
           {hasVideo ? (
             <video
               className={cx('hero__video', videoReady && 'is-ready')}
@@ -85,7 +87,7 @@ export default function Hero({ hero, personalInfo, socialLinks, ready = true }) 
           <TextReveal
             as="span"
             className="hero__name"
-            text={hero.name}
+            text={personalInfo.name}
             stagger={0.09}
             delay={0.3}
             duration={1.25}
@@ -95,7 +97,7 @@ export default function Hero({ hero, personalInfo, socialLinks, ready = true }) 
           <TextReveal
             as="span"
             className="hero__role"
-            text={hero.role}
+            text={personalInfo.title}
             stagger={0.05}
             delay={0.62}
             duration={1}

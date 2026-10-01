@@ -14,6 +14,8 @@ function setMeta(selector, attribute, content) {
 export default function useDocumentMeta({ siteConfig, personalInfo }) {
   useEffect(() => {
     const title = personalInfo.name + ' — ' + personalInfo.title;
+    // siteName/shortName may be left blank to follow personalInfo.
+    const siteName = siteConfig.siteName || title;
     document.title = title;
     document.documentElement.lang = (siteConfig.locale || 'en').split('_')[0];
 
@@ -23,7 +25,7 @@ export default function useDocumentMeta({ siteConfig, personalInfo }) {
     setMeta('meta[name="theme-color"]', 'content', siteConfig.themeColor);
 
     setMeta('meta[property="og:title"]', 'content', title);
-    setMeta('meta[property="og:site_name"]', 'content', siteConfig.siteName);
+    setMeta('meta[property="og:site_name"]', 'content', siteName);
     setMeta('meta[property="og:description"]', 'content', siteConfig.description);
     setMeta('meta[property="og:url"]', 'content', siteConfig.url);
     setMeta('meta[property="og:image"]', 'content', siteConfig.ogImage);

@@ -276,3 +276,48 @@
     min-height: 30rem;
   }
 }
+
+/* ==========================================================================
+   Contact — the last shot
+   ========================================================================== */
+
+.contact__closing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.9rem, 2vw, 1.5rem);
+  margin-top: clamp(4rem, 9vw, 8rem);
+  text-align: center;
+}
+
+.contact__closing-rule {
+  width: 1px;
+  height: clamp(3rem, 8vw, 6rem);
+  background: linear-gradient(180deg, transparent, var(--amber-line), transparent);
+}
+
+.contact__closing-line {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  color: var(--fg-soft);
+}
+
+.contact__closing-slate {
+  font-size: 0.5rem;
+  letter-spacing: 0.34em;
+  color: var(--fg-ghost);
+}
+
+/* Literal fade to black at the very bottom of the page */
+.contact__fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(6rem, 16vw, 14rem);
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--black));
+}

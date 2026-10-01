@@ -362,3 +362,152 @@
     padding: 0.75rem 0.9rem;
   }
 }
+
+/* ==========================================================================
+   About — philosophy, credits and the quieter aside
+   ========================================================================== */
+
+.about__philosophy {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.2vw, 0.9rem);
+  padding-block: clamp(1rem, 2vw, 1.5rem);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.about__principle {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+}
+
+.about__principle-index {
+  flex: 0 0 auto;
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  color: var(--amber);
+}
+
+.about__principle-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.35;
+  color: var(--fg);
+}
+
+/* ----------------------------------------------------- selected credits --- */
+
+.about__panel--credits .about__panel-title {
+  margin-bottom: 0.25rem;
+}
+
+.about__credits {
+  display: flex;
+  flex-direction: column;
+}
+
+.about__credit {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.2rem 1rem;
+  padding-block: clamp(0.9rem, 1.8vw, 1.3rem);
+  border-top: 1px solid var(--line);
+  transition: padding-left 0.45s var(--ease-out), background-color 0.45s var(--ease-out);
+}
+
+.about__credit:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .about__credit:hover {
+    padding-left: 0.6rem;
+    background: linear-gradient(90deg, rgba(217, 163, 74, 0.06), transparent 70%);
+  }
+}
+
+.about__credit-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--fg);
+}
+
+.about__credit-role {
+  grid-column: 1;
+  font-size: var(--text-small);
+  color: var(--fg-dim);
+}
+
+.about__credit-meta {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  font-size: 0.48rem;
+  letter-spacing: 0.16em;
+  color: var(--fg-ghost);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------ the aside --- */
+
+.about__panel--aside {
+  gap: clamp(0.9rem, 1.8vw, 1.35rem);
+}
+
+.about__aside-title {
+  font-size: 0.52rem;
+  letter-spacing: 0.26em;
+  color: var(--amber);
+}
+
+.about__aside-title--spaced {
+  margin-top: clamp(1.25rem, 2.5vw, 2rem);
+  padding-top: clamp(1.25rem, 2.5vw, 2rem);
+  border-top: 1px solid var(--line);
+}
+
+.about__panel--aside .about__award {
+  grid-template-columns: 3rem 1fr;
+  padding-block: 0.7rem;
+  font-size: 0.8rem;
+}
+
+.about__panel--aside .about__award-title,
+.about__panel--aside .about__award-event {
+  font-size: 0.78rem;
+}
+
+.about__equip-line {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--fg-dim);
+}
+
+.about__tags-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.about__panel--aside .about__tag {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.68rem;
+}
+
+/* Equipment icon beside each kit group */
+.about__equip-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.about__equip-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+}

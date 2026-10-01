@@ -4,13 +4,23 @@ import Modal from '@/components/ui/Modal';
 import Lightbox from '@/components/ui/Lightbox';
 import Frame from '@/components/ui/Frame';
 import VideoPlayer from './VideoPlayer';
+import DnaSheet from '@/components/ui/DnaSheet';
 import useReducedMotion from '@/hooks/useReducedMotion';
 import { EASE_OUT } from '@/lib/motion';
 import { categoryLabel, pad } from '@/lib/utils';
 import '@/styles/project.css';
 
 /** Full project breakdown: meta, approach, gallery, reel and credits. */
-export default function ProjectModal({ project: incoming, categories, open, onClose, onNavigate, position }) {
+export default function ProjectModal({
+  project: incoming,
+  categories,
+  movementLibrary = {},
+  copy = {},
+  open,
+  onClose,
+  onNavigate,
+  position,
+}) {
   const reduced = useReducedMotion();
   const [lightboxIndex, setLightboxIndex] = useState(-1);
   // Hold on to the last project so the close animation has something to render.
@@ -34,7 +44,6 @@ export default function ProjectModal({ project: incoming, categories, open, onCl
     { label: 'My role', value: project.role },
     { label: 'Year', value: project.year },
     { label: 'Category', value: categoryLabel(categories, project.category) },
-    { label: 'Format', value: project.format },
     { label: 'Location', value: project.location },
     { label: 'Length', value: project.duration },
   ].filter((item) => item.value);
@@ -122,6 +131,19 @@ export default function ProjectModal({ project: incoming, categories, open, onCl
                   </ul>
                 </div>
               ) : null}
+            </motion.div>
+
+            {/* --------------------------------------- cinematography DNA */}
+            <motion.div className="project__dna" {...block(0.26)}>
+              <DnaSheet
+                dna={project.dna}
+                palette={project.palette}
+                movements={project.movements}
+                movementLibrary={movementLibrary}
+                label={copy.dnaLabel || 'Cinematography DNA'}
+                paletteLabel={copy.paletteLabel || 'Frame palette'}
+                icons={copy.dnaIcons || {}}
+              />
             </motion.div>
 
             {/* ----------------------------------------------------- video */}

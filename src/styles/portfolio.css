@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Portfolio grid + filters
+   Work — cinematic chapters
    ========================================================================== */
 
 .portfolio {
@@ -88,7 +88,6 @@
   background: var(--amber);
 }
 
-/* Fallback highlight when reduced motion removes the sliding pill */
 @media (prefers-reduced-motion: reduce) {
   .portfolio__filter.is-active {
     color: var(--black);
@@ -102,13 +101,13 @@
   opacity: 0.6;
 }
 
-/* ----------------------------------------------------------------- grid --- */
+/* ------------------------------------------------------------- chapters --- */
 
-.portfolio__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 2.5vw, 2.5rem);
-  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+.portfolio__chapters {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4rem, 10vw, 11rem);
+  margin-top: clamp(3rem, 7vw, 6rem);
 }
 
 .portfolio__empty {
@@ -117,177 +116,221 @@
   text-align: center;
 }
 
-/* ----------------------------------------------------------------- card --- */
+/* ---------------------------------------------------------------- chapter -- */
 
-.project-card {
-  position: relative;
+.chapter {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+  align-items: center;
 }
 
-.project-card__button {
+.chapter__media {
+  position: relative;
+  min-width: 0;
+}
+
+.chapter__media-button {
   display: block;
   width: 100%;
-  text-align: left;
   color: inherit;
 }
 
-.project-card__frame .frame__window {
+.chapter__frame .frame__window {
   border: 1px solid var(--line);
 }
 
-.project-card__index {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 3;
-  font-size: 0.56rem;
-  letter-spacing: 0.18em;
-  color: var(--fg-soft);
-  mix-blend-mode: difference;
-}
-
-.project-card__award {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 3;
-  padding: 0.35rem 0.6rem;
-  font-size: 0.48rem;
-  letter-spacing: 0.2em;
-  color: var(--amber-bright);
-  background: rgba(5, 5, 5, 0.66);
-  border: 1px solid var(--amber-line);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-.project-card__hover {
+/* The second still, cross-faded in on hover */
+.chapter__alt {
   position: absolute;
   inset: 0;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  background: rgba(3, 3, 3, 0.35);
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   opacity: 0;
-  transition: opacity 0.5s var(--ease-out);
-}
-
-.project-card__hover-inner {
-  display: grid;
-  place-items: center;
-  width: clamp(88px, 9vw, 116px);
-  height: clamp(88px, 9vw, 116px);
-  font-size: 0.54rem;
-  letter-spacing: 0.16em;
-  text-align: center;
-  color: var(--black);
-  background: var(--amber);
-  border-radius: 50%;
-  transform: scale(0.72);
-  transition: transform 0.6s var(--ease-out);
+  transform: scale(1.04);
+  transition: opacity 0.9s var(--ease-out), transform 1.4s var(--ease-out);
+  pointer-events: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .project-card__button:hover .project-card__hover,
-  .project-card__button:focus-visible .project-card__hover {
+  .chapter__media-button:hover .chapter__alt,
+  .chapter__media-button:focus-visible .chapter__alt {
     opacity: 1;
-  }
-
-  .project-card__button:hover .project-card__hover-inner,
-  .project-card__button:focus-visible .project-card__hover-inner {
     transform: scale(1);
   }
-
-  /* No custom cursor? The overlay disc still tells the story. */
-  body.has-custom-cursor .project-card__hover {
-    background: rgba(3, 3, 3, 0.22);
-  }
-
-  body.has-custom-cursor .project-card__hover-inner {
-    display: none;
-  }
 }
 
-.project-card__meta {
+.chapter__bars {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding-top: clamp(1rem, 1.8vw, 1.5rem);
-}
-
-.project-card__headline {
-  display: flex;
-  align-items: baseline;
   justify-content: space-between;
-  gap: 1rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-out);
 }
 
-.project-card__title {
+.chapter__bars span {
+  height: clamp(8px, 2.2%, 20px);
+  background: var(--black);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chapter__media-button:hover .chapter__bars,
+  .chapter__media-button:focus-visible .chapter__bars {
+    opacity: 1;
+  }
+}
+
+.chapter__slate {
+  position: absolute;
+  bottom: 0.85rem;
+  right: 0.9rem;
+  z-index: 4;
+  font-size: 0.46rem;
+  letter-spacing: 0.2em;
+  color: var(--fg-soft);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+}
+
+/* ------------------------------------------------------------------ body -- */
+
+.chapter__body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 1.8vw, 1.4rem);
+  min-width: 0;
+}
+
+.chapter__marker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 0.5rem;
+  letter-spacing: 0.24em;
+  color: var(--amber);
+}
+
+.chapter__marker-rule {
+  flex: 0 0 auto;
+  width: clamp(1.25rem, 3vw, 3rem);
+  height: 1px;
+  background: var(--amber-line);
+}
+
+.chapter__marker-cat {
+  color: var(--fg-faint);
+}
+
+.chapter__title {
+  margin: 0;
+}
+
+.chapter__title-button {
   font-family: var(--font-display);
-  font-size: clamp(1.35rem, 2.2vw, 2.1rem);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.005em;
+  font-size: clamp(1.9rem, 4.2vw, 3.6rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-align: left;
+  color: var(--fg);
   transition: color 0.4s var(--ease-out);
 }
 
-.project-card__button:hover .project-card__title,
-.project-card__button:focus-visible .project-card__title {
+.chapter__title-button:hover,
+.chapter__title-button:focus-visible {
   color: var(--amber);
 }
 
-.project-card__year {
-  flex: 0 0 auto;
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  color: var(--fg-faint);
+.chapter__tagline {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--fg-soft);
+  max-width: 46ch;
 }
 
-.project-card__tagline {
-  font-size: var(--text-small);
-  color: var(--fg-dim);
-  max-width: 52ch;
-}
-
-.project-card__foot {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding-top: 0.7rem;
+.chapter__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(46%, 130px), 1fr));
+  gap: 0.9rem clamp(1rem, 2vw, 1.75rem);
+  margin: 0;
+  padding-block: clamp(0.9rem, 1.8vw, 1.25rem);
   border-top: 1px solid var(--line);
-  font-size: 0.72rem;
-  color: var(--fg-faint);
+  border-bottom: 1px solid var(--line);
 }
 
-.project-card__category {
-  font-size: 0.52rem;
-  letter-spacing: 0.2em;
+.chapter__meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.chapter__meta dd {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--fg);
+}
+
+.chapter__movements {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.chapter__movements ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.85rem, 2vw, 1.6rem);
+}
+
+.chapter__palette {
+  max-width: 26rem;
+}
+
+.chapter__open {
+  align-self: flex-start;
+  margin-top: 0.35rem;
+  font-size: 0.54rem;
+  color: var(--fg);
+}
+
+.chapter__open:hover {
   color: var(--amber);
 }
 
-.project-card__divider {
-  width: 12px;
-  height: 1px;
-  background: var(--line-strong);
-}
+/* ---------------------------------------------------------- breakpoints --- */
 
-/* --------------------------------------------------------- breakpoints ---- */
+@media (min-width: 900px) {
+  .chapter {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 4vw, 4.5rem);
+  }
 
-@media (min-width: 700px) {
-  .portfolio__grid {
-    grid-template-columns: repeat(2, 1fr);
+  /* Alternate which side the frame sits on, chapter by chapter */
+  .chapter:nth-child(even) .chapter__media {
+    order: 2;
+  }
+
+  .chapter:nth-child(even) {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+
+  /* Featured chapters run wider and drop the column split */
+  .chapter--featured {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
   }
 }
 
-@media (min-width: 1180px) {
-  .portfolio__grid {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  .project-card {
-    grid-column: span 2;
-  }
-
-  .project-card--featured {
-    grid-column: span 3;
+@media (min-width: 1400px) {
+  .chapter {
+    gap: clamp(3rem, 5vw, 6rem);
   }
 }
