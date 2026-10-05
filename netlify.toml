@@ -10,7 +10,7 @@
   NODE_VERSION = "22"
   # Leave the admin editor out of the public build. Edit content locally with
   # `npm run dev` and commit public/content.json instead.
-  VITE_ADMIN_ENABLED = "false"
+  VITE_ADMIN_ENABLED = "true"
 
 # The site is a single page, but this keeps deep links and the #/admin hash
 # working if you ever add routes.
